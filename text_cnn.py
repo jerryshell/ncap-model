@@ -1,21 +1,22 @@
 import tensorflow as tf
+import tensorflow.keras as keras
 
 
-class TextCNN(tf.keras.Model):
+class TextCNN(keras.Model):
     def __init__(self):
         super().__init__()
-        self.conv1 = tf.keras.layers.Conv1D(256, 3, padding='same', strides=1, activation='relu')
-        self.pool1 = tf.keras.layers.MaxPooling1D(pool_size=48)
+        self.conv1 = keras.layers.Conv1D(256, 3, padding='same', strides=1, activation='relu')
+        self.pool1 = keras.layers.MaxPooling1D(pool_size=48)
 
-        self.conv2 = tf.keras.layers.Conv1D(256, 4, padding='same', strides=1, activation='relu')
-        self.pool2 = tf.keras.layers.MaxPooling1D(pool_size=47)
+        self.conv2 = keras.layers.Conv1D(256, 4, padding='same', strides=1, activation='relu')
+        self.pool2 = keras.layers.MaxPooling1D(pool_size=47)
 
-        self.conv3 = tf.keras.layers.Conv1D(256, 5, padding='same', strides=1, activation='relu')
-        self.pool3 = tf.keras.layers.MaxPooling1D(pool_size=46)
+        self.conv3 = keras.layers.Conv1D(256, 5, padding='same', strides=1, activation='relu')
+        self.pool3 = keras.layers.MaxPooling1D(pool_size=46)
 
-        self.flat = tf.keras.layers.Flatten()
-        self.drop = tf.keras.layers.Dropout(0.2)
-        self.out = tf.keras.layers.Dense(2, activation='softmax')
+        self.flat = keras.layers.Flatten()
+        self.drop = keras.layers.Dropout(0.2)
+        self.out = keras.layers.Dense(2, activation='softmax')
 
     @tf.function
     def call(self, inputs, **kwargs):
@@ -34,3 +35,35 @@ class TextCNN(tf.keras.Model):
         drop = self.drop(flat)
         out = self.out(drop)
         return out
+
+
+def create_model(feature1_number, feature2_number):
+    # inputs = keras.Input(shape=(feature1_number, feature2_number))
+    #
+    # cnn1 = keras.layers.Conv1D(256, 3, padding='same', strides=1, activation='relu')(input)
+    # cnn1 = keras.layers.MaxPooling1D(pool_size=48)(cnn1)
+    #
+    # cnn2 = keras.layers.Conv1D(256, 4, padding='same', strides=1, activation='relu')(input)
+    # cnn2 = keras.layers.MaxPooling1D(pool_size=47)(cnn2)
+    #
+    # cnn3 = keras.layers.Conv1D(256, 5, padding='same', strides=1, activation='relu')(input)
+    # cnn3 = keras.layers.MaxPooling1D(pool_size=46)(cnn3)
+    #
+    # cnn = keras.layers.concatenate([cnn1, cnn2, cnn3], axis=-1)
+    # flat = keras.layers.Flatten()(cnn)
+    # drop = keras.layers.Dropout(0.2)(flat)
+    # outputs = keras.layers.Dense(2, activation='softmax')(drop)
+
+    inputs = keras.Input(shape=(feature1_number, feature2_number))
+    flat = keras.layers.Flatten()(inputs)
+    x = keras.layers.Dense(64, activation='relu')(flat)
+    x = keras.layers.Dense(64, activation='relu')(x)
+    outputs = keras.layers.Dense(2, activation='softmax')(x)
+
+    model = keras.Model(inputs=inputs, outputs=outputs)
+    model.compile(
+        loss='sparse_categorical_crossentropy',
+        optimizer='adam',
+        metrics=['accuracy']
+    )
+    return model

@@ -7,7 +7,7 @@ feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0
 feature2_number = 300  # 每个词语的向量
 
 # 加载模型
-model = keras.models.load_model("save/1")
+model = keras.models.load_model("save.h5")
 
 # 数据工具
 data_helper = DataHelper(feature1_number, feature2_number)
