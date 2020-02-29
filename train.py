@@ -43,17 +43,20 @@ for batch_index in range(num_batch):
     # 将求出的导数值传入优化器，使用优化器的 apply_gradients 方法更新模型参数
     optimizer.apply_gradients(grads_and_vars=zip(grads, model.variables))
 
+# 保存
+print('saving...')
+keras.models.save_model(model, 'save/1')
+
 # 测试
 print('testing...')
 print(model.predict(data_helper.get_test_data_by_str('我好开心')))
 print(model.predict(data_helper.get_test_data_by_str('我很失望')))
 
-test_label, test_data = data_helper.get_batch_label_and_vector(data_loader, 50000)
+num_test_data = 10000
+test_batch_size = 1
 sparse_categorical_accuracy = tf.keras.metrics.SparseCategoricalAccuracy()
-y_pred = model.predict(test_data)
-sparse_categorical_accuracy.update_state(y_true=test_label, y_pred=y_pred)
-print("test accuracy: %f" % sparse_categorical_accuracy.result())
-
-# 保存
-print('saving...')
-keras.models.save_model(model, 'save/1')
+for test_index in range(num_test_data):
+    y, X = data_helper.get_batch_label_and_vector(data_loader, test_batch_size)
+    y_pred = model.predict(X)
+    sparse_categorical_accuracy.update_state(y_true=y, y_pred=y_pred)
+    print("test accuracy: %f" % sparse_categorical_accuracy.result())
