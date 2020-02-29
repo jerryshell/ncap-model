@@ -6,4 +6,7 @@
 
 ## 参考
 
+https://tf.wiki
+https://www.tensorflow.org/guide/keras/save_and_serialize#part_ii_saving_and_loading_of_subclassed_models
+https://zhuanlan.zhihu.com/p/25630700
 https://blog.csdn.net/asialee_bird/article/details/88813385
