@@ -3,8 +3,6 @@ import numpy as np
 from gensim.models.keyedvectors import KeyedVectors
 
 
-
-
 class DataHelper:
     def __init__(self, feature1_number, feature2_number):
         self.feature1_number = feature1_number
