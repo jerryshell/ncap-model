@@ -11,8 +11,9 @@ feature2_number = 300  # 每个词语的向量
 batch_size = 10
 
 # 数据加载工具
-
+print('data loading...')
 data_loader = DataLoader()
+print('vector loading...')
 data_helper = DataHelper(feature1_number, feature2_number)
 
 # 模型
@@ -23,7 +24,7 @@ optimizer = keras.optimizers.Adam()
 
 # 迭代训练
 # num_batch = data_helper.data_loader.num_train_data // batch_size
-num_batch = 1000
+num_batch = 10000
 for batch_index in range(num_batch):
     # 从 data_loader 中随机取出一批训练数据
     y, X = data_helper.get_batch_label_and_vector(data_loader, batch_size)
@@ -43,6 +44,7 @@ for batch_index in range(num_batch):
     optimizer.apply_gradients(grads_and_vars=zip(grads, model.variables))
 
 # 测试
+print('testing...')
 print(model.predict(data_helper.get_test_data_by_str('我好开心')))
 print(model.predict(data_helper.get_test_data_by_str('我很失望')))
 
@@ -53,4 +55,5 @@ sparse_categorical_accuracy.update_state(y_true=test_label, y_pred=y_pred)
 print("test accuracy: %f" % sparse_categorical_accuracy.result())
 
 # 保存
+print('saving...')
 keras.models.save_model(model, 'save/1')
