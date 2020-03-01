@@ -1,6 +1,6 @@
 from data_helper import DataHelper
 from data_loader import DataLoader
-from text_cnn import create_model
+from text_cnn import create_model3
 
 # 超参数
 feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0
@@ -13,11 +13,11 @@ print('vector loading...')
 data_helper = DataHelper(feature1_number, feature2_number)
 
 # 模型
-model = create_model(feature1_number, feature2_number)
+model = create_model3(feature1_number, feature2_number)
 
 # 加载数据
 epoch = 5
-batch_size = 500
+batch_size = 100
 num_data = data_loader.num_train_data
 num_batch = num_data // batch_size * epoch
 for batch_index in range(num_batch):

@@ -77,3 +77,21 @@ def create_model2(feature1_number, feature2_number):
         metrics=['accuracy']
     )
     return model
+
+
+def create_model3(feature1_number, feature2_number):
+    inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
+
+    # flat = keras.layers.Flatten()(inputs)
+
+    lstm = keras.layers.LSTM(64, activation='relu')(inputs)
+
+    outputs = keras.layers.Dense(4, activation='softmax')(lstm)
+
+    model = keras.Model(inputs=inputs, outputs=outputs)
+    model.compile(
+        loss='sparse_categorical_crossentropy',
+        optimizer='adam',
+        metrics=['accuracy']
+    )
+    return model

@@ -22,27 +22,25 @@ class DataHelper:
         for batch_index in range(batch_size):
             label, data = data_loader.next()
             # print(label, data)
-            # 分词
-            cut = jieba.lcut(data)
-            # 去空格
-            cut = [item for item in cut if item != ' ']
-            # print(cut)
-            # print(len(cut))
+            word_list = data.split(' ')
+            # print(word_list)
+            # print(len(word_list))
             vector = np.zeros(shape=(self.feature1_number, self.feature2_number))
             for i in range(self.feature1_number):
-                if i < len(cut):
-                    word = cut[i]
+                if i < len(word_list):
+                    word = word_list[i]
                     vec = self.word2vec(word)
                     vector[i] = vec
             batch_label[batch_index] = label
             batch_data[batch_index] = vector
         return batch_label, batch_data
 
-    def get_vector_by_str(self, str):
+    # 将一句话转成向量
+    def sentence2vector(self, sentence):
         # 去特殊字符
-        str = re.sub(r'\W+', ' ', str).replace('_', ' ')
+        sentence = re.sub(r'\W+', ' ', sentence).replace('_', ' ')
         # 分词
-        cut = jieba.lcut(str)
+        cut = jieba.lcut(sentence)
         # 去空格
         cut = [item for item in cut if item != ' ']
         print(cut)
@@ -54,7 +52,18 @@ class DataHelper:
                 vector[i] = vec
         return vector
 
-    def get_test_data_by_str(self, str):
-        batch_data = np.zeros(shape=(1, self.feature1_number, self.feature2_number))
-        batch_data[0] = self.get_vector_by_str(str)
-        return batch_data
+    # 将一句话转成测试数据
+    def sentence2test_data(self, sentence):
+        test_data = np.zeros(shape=(1, self.feature1_number, self.feature2_number))
+        test_data[0] = self.sentence2vector(sentence)
+        return test_data
+
+
+if __name__ == '__main__':
+    from data_loader import DataLoader
+
+    feature1_number = 60
+    feature2_number = 300
+    data_loader = DataLoader()
+    data_helper = DataHelper(feature1_number, feature2_number)
+    print(data_helper.get_batch_label_and_vector(data_loader, 10))
