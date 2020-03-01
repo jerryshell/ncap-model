@@ -4,6 +4,12 @@
 
 词向量：https://github.com/Embedding/Chinese-Word-Vectors
 
+## 依赖
+
+```bash
+pip3 install --upgrade tensorflow gensim numpy jieba pandas
+```
+
 ## 参考
 
 https://tf.wiki
