@@ -1,3 +1,5 @@
+import re
+
 import jieba
 import numpy as np
 from gensim.models.keyedvectors import KeyedVectors
@@ -20,7 +22,9 @@ class DataHelper:
         for batch_index in range(batch_size):
             label, data = data_loader.next()
             # print(label, data)
+            # 分词
             cut = jieba.lcut(data)
+            # 去空格
             cut = [item for item in cut if item != ' ']
             # print(cut)
             # print(len(cut))
@@ -35,8 +39,13 @@ class DataHelper:
         return batch_label, batch_data
 
     def get_vector_by_str(self, str):
+        # 去特殊字符
+        str = re.sub(r'\W+', ' ', str).replace('_', ' ')
+        # 分词
         cut = jieba.lcut(str)
+        # 去空格
         cut = [item for item in cut if item != ' ']
+        print(cut)
         vector = np.zeros(shape=(self.feature1_number, self.feature2_number))
         for i in range(self.feature1_number):
             if i < len(cut):
