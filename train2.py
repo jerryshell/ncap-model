@@ -17,7 +17,7 @@ model = create_model(feature1_number, feature2_number)
 
 # 加载数据
 epoch = 1
-batch_size = 20
+batch_size = 10
 num_data = data_loader.num_train_data
 num_batch = num_data // batch_size * epoch
 for batch_index in range(num_batch):
@@ -26,7 +26,6 @@ for batch_index in range(num_batch):
     model.fit(X, y)
 
 # 测试
-batch_size = 100
 num_data = int(data_loader.num_train_data / 2)
 num_batch = num_data // batch_size
 for batch_index in range(num_batch):
