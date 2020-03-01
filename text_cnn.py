@@ -52,7 +52,7 @@ def create_model(feature1_number, feature2_number):
     cnn = keras.layers.concatenate([cnn1, cnn2, cnn3], axis=-1)
     flat = keras.layers.Flatten()(cnn)
     drop = keras.layers.Dropout(0.2)(flat)
-    outputs = keras.layers.Dense(2, activation='softmax')(drop)
+    outputs = keras.layers.Dense(4, activation='softmax')(drop)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(

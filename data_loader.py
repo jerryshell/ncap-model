@@ -13,6 +13,6 @@ class DataLoader:
 
     def next(self):
         index = np.random.randint(0, self.num_train_data)
-        label = 0 if 0 == self.train_label[index] else 1
+        # label = 0 if 0 == self.train_label[index] else 1
         data = re.sub(r'\W+', ' ', self.train_data[index]).replace('_', ' ')
-        return label, data
+        return self.train_label[index], data

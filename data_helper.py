@@ -7,7 +7,7 @@ class DataHelper:
     def __init__(self, feature1_number, feature2_number):
         self.feature1_number = feature1_number
         self.feature2_number = feature2_number
-        self.gensim_model = KeyedVectors.load_word2vec_format('sgns.weibo.word')
+        self.gensim_model = KeyedVectors.load_word2vec_format('sgns.wiki.bigram-char')
 
     def word2vec(self, word):
         if word in self.gensim_model:
