@@ -51,10 +51,12 @@ class Index(Resource):
         token = args['token']
         train_flag = args['trainFlag']
         train_label = args['trainLabel']
+
         # 加载 token 列表
         token_list = load_token_list()
         if token not in token_list:
             return {'ok': False, 'message': 'token error'}
+
         # 调教模式保存数据
         time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         if train_flag:
@@ -68,6 +70,7 @@ class Index(Resource):
         b = result[0][1] * 100
         c = result[0][2] * 100
         d = result[0][3] * 100
+
         # 保存历史记录
         history = '%s %s %s %s %s %s %s' % (token, time_str, sentence, a, b, c, d)
         os.system('echo "%s" >> history' % history)
