@@ -1,6 +1,6 @@
 from data_helper import DataHelper
 from data_loader import DataLoader
-from text_cnn import create_model3
+from models import create_model_rnn
 
 # 超参数
 feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0
@@ -13,7 +13,7 @@ print('vector loading...')
 data_helper = DataHelper(feature1_number, feature2_number)
 
 # 模型
-model = create_model3(feature1_number, feature2_number)
+model = create_model_rnn(feature1_number, feature2_number)
 
 # 加载数据
 epoch = 10

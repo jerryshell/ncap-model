@@ -3,7 +3,7 @@ import tensorflow.keras as keras
 
 from data_helper import DataHelper
 from data_loader import DataLoader
-from text_cnn import TextCNN
+from models import TextCNN
 
 # 超参数
 feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0

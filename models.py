@@ -37,7 +37,7 @@ class TextCNN(keras.Model):
         return out
 
 
-def create_model(feature1_number, feature2_number):
+def create_model_text_cnn(feature1_number, feature2_number):
     inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
 
     cnn1 = keras.layers.Conv1D(256, 3, padding='same', strides=1, activation='relu')(inputs)
@@ -63,7 +63,7 @@ def create_model(feature1_number, feature2_number):
     return model
 
 
-def create_model2(feature1_number, feature2_number):
+def create_model_simple(feature1_number, feature2_number):
     inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
     flat = keras.layers.Flatten()(inputs)
     x = keras.layers.Dense(64, activation='relu')(flat)
@@ -79,7 +79,7 @@ def create_model2(feature1_number, feature2_number):
     return model
 
 
-def create_model3(feature1_number, feature2_number):
+def create_model_rnn(feature1_number, feature2_number):
     inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
 
     lstm = tf.keras.layers.RNN(
@@ -92,7 +92,7 @@ def create_model3(feature1_number, feature2_number):
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
-        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        loss='sparse_categorical_crossentropy',
         optimizer='sgd',
         metrics=['accuracy']
     )
