@@ -15,28 +15,29 @@ print('model loading...')
 # 加载模型
 model = keras.models.load_model("save.h5")
 
-# 数据工具
+# 加载数据
 print('vector loading...')
 data_helper = DataHelper(feature1_number, feature2_number)
 
-# flask
+# flask 初始化
 app = Flask(__name__)
 api = Api(app)
 
-# form
+# 请求参数处理器
 parser = reqparse.RequestParser()
 parser.add_argument('sentence', type=str, required=True, help='need sentence data')
 parser.add_argument('token', type=str, required=True, help='need token data')
 
 # token
-tokens = ['super@dmin', 'fj123']
+tokens = ['Super@dmin', 'fj123']
 
 
-class HelloWorld(Resource):
+class Index(Resource):
     def get(self):
         return {'Auth': 'Jerry', 'GitHub': 'https://github.com/jerryshell'}
 
     def post(self):
+        # 解析请求参数
         args = parser.parse_args()
         sentence = args['sentence']
         token = args['token']
@@ -58,7 +59,8 @@ class HelloWorld(Resource):
         return {'ok': True, 'a': a, 'b': b, 'c': c, 'd': d}
 
 
-api.add_resource(HelloWorld, '/')
+# 绑定路由
+api.add_resource(Index, '/')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
