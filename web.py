@@ -7,6 +7,9 @@ from flask_restful import reqparse, Api, Resource
 
 from data_helper import DataHelper
 
+# 实时调教功能
+train_now = True
+
 # 超参数
 feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0
 feature2_number = 300  # 每个词语的向量
@@ -27,8 +30,8 @@ api = Api(app)
 parser = reqparse.RequestParser()
 parser.add_argument('sentence', type=str, required=True, help='need sentence data')
 parser.add_argument('token', type=str, required=True, help='need token data')
-parser.add_argument('train_flag', type=bool, required=False)
-parser.add_argument('train_label', type=str, required=False)
+parser.add_argument('trainFlag', type=bool, required=False)
+parser.add_argument('trainLabel', type=str, required=False)
 
 
 # 加载 token 列表
@@ -46,8 +49,8 @@ class Index(Resource):
         args = parser.parse_args()
         sentence = args['sentence']
         token = args['token']
-        train_flag = args['train_flag']
-        train_label = args['train_label']
+        train_flag = args['trainFlag']
+        train_label = args['trainLabel']
         # 加载 token 列表
         token_list = load_token_list()
         if token not in token_list:
@@ -57,6 +60,7 @@ class Index(Resource):
         if train_flag:
             extra_data = '%s,%s,%s,%s' % (train_label, sentence, time_str, token)
             os.system('echo "%s" >> extra_data' % extra_data)
+
         # 调用模型获得结果
         test_data = data_helper.sentence2test_data(sentence)
         result = model.predict(test_data)
@@ -68,6 +72,11 @@ class Index(Resource):
         history = '%s %s %s %s %s %s %s' % (token, time_str, sentence, a, b, c, d)
         os.system('echo "%s" >> history' % history)
         print(history)
+
+        # 实时调教
+        if train_now and train_flag:
+            model.fit(test_data, train_label)
+
         # 返回响应
         return {'ok': True, 'a': a, 'b': b, 'c': c, 'd': d}
 
