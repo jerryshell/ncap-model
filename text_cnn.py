@@ -82,16 +82,18 @@ def create_model2(feature1_number, feature2_number):
 def create_model3(feature1_number, feature2_number):
     inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
 
-    # flat = keras.layers.Flatten()(inputs)
+    lstm = tf.keras.layers.RNN(
+        tf.keras.layers.LSTMCell(128)
+    )(inputs)
 
-    lstm = keras.layers.LSTM(64, activation='relu')(inputs)
+    btn = tf.keras.layers.BatchNormalization()(lstm)
 
-    outputs = keras.layers.Dense(4, activation='softmax')(lstm)
+    outputs = keras.layers.Dense(4, activation='softmax')(btn)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
-        loss='sparse_categorical_crossentropy',
-        optimizer='adam',
+        loss=tf.keras.losses.SparseCategoricalCrossentropy(from_logits=True),
+        optimizer='sgd',
         metrics=['accuracy']
     )
     return model
