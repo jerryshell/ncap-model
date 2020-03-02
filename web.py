@@ -53,6 +53,7 @@ class HelloWorld(Resource):
         # 保存历史记录
         history = '%s %s %s %s %s %s %s' % (token, time_str, sentence, a, b, c, d)
         os.system('echo "%s" >> history' % history)
+        print(history)
         # 返回响应
         return {'ok': True, 'a': a, 'b': b, 'c': c, 'd': d}
 
