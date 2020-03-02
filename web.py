@@ -28,8 +28,11 @@ parser = reqparse.RequestParser()
 parser.add_argument('sentence', type=str, required=True, help='need sentence data')
 parser.add_argument('token', type=str, required=True, help='need token data')
 
-# token
-tokens = ['Super@dmin', 'fj123']
+
+# 加载 token 列表
+def load_token_list():
+    with open('./token_list', 'r') as f:
+        return [token.strip() for token in f.readlines()]
 
 
 class Index(Resource):
@@ -41,7 +44,9 @@ class Index(Resource):
         args = parser.parse_args()
         sentence = args['sentence']
         token = args['token']
-        if token not in tokens:
+        # 加载 token 列表
+        token_list = load_token_list()
+        if token not in token_list:
             return {'ok': False, 'message': 'token error'}
         # 调用模型获得结果
         test_data = data_helper.sentence2test_data(sentence)
