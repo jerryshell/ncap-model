@@ -27,6 +27,8 @@ api = Api(app)
 parser = reqparse.RequestParser()
 parser.add_argument('sentence', type=str, required=True, help='need sentence data')
 parser.add_argument('token', type=str, required=True, help='need token data')
+parser.add_argument('train_flag', type=bool, required=False)
+parser.add_argument('train_label', type=str, required=False)
 
 
 # 加载 token 列表
@@ -44,10 +46,17 @@ class Index(Resource):
         args = parser.parse_args()
         sentence = args['sentence']
         token = args['token']
+        train_flag = args['train_flag']
+        train_label = args['train_label']
         # 加载 token 列表
         token_list = load_token_list()
         if token not in token_list:
             return {'ok': False, 'message': 'token error'}
+        # 调教模式保存数据
+        time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+        if train_flag:
+            extra_data = '%s,%s,%s,%s' % (train_label, sentence, time_str, token)
+            os.system('echo "%s" >> extra_data' % extra_data)
         # 调用模型获得结果
         test_data = data_helper.sentence2test_data(sentence)
         result = model.predict(test_data)
@@ -55,7 +64,6 @@ class Index(Resource):
         b = result[0][1] * 100
         c = result[0][2] * 100
         d = result[0][3] * 100
-        time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         # 保存历史记录
         history = '%s %s %s %s %s %s %s' % (token, time_str, sentence, a, b, c, d)
         os.system('echo "%s" >> history' % history)
