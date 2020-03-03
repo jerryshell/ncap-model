@@ -1,14 +1,22 @@
 import os
 import time
 
+import numpy as np
 import tensorflow.keras as keras
 from flask import Flask
 from flask_restful import reqparse, Api, Resource
 
 from data_helper import DataHelper
 
-# 实时调教功能
-train_now = True
+# 网站公告
+notice = ''
+
+# 训练状态
+train_status = {
+    'real_time_tuning': True,  # 实时调教
+    'color': 'green',  # 公告字体颜色
+    'message': '调教参数实时更新',  # 公告信息
+}
 
 # 超参数
 feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0
@@ -27,11 +35,16 @@ app = Flask(__name__)
 api = Api(app)
 
 # 请求参数处理器
-parser = reqparse.RequestParser()
-parser.add_argument('sentence', type=str, required=True, help='need sentence data')
-parser.add_argument('token', type=str, required=True, help='need token data')
-parser.add_argument('trainFlag', type=bool, required=False)
-parser.add_argument('trainLabel', type=str, required=False)
+client_parser = reqparse.RequestParser()
+client_parser.add_argument('sentence', type=str, required=True, help='need sentence data')
+client_parser.add_argument('token', type=str, required=True, help='need token data')
+client_parser.add_argument('trainFlag', type=bool, required=False)
+client_parser.add_argument('trainLabel', type=int, required=False)
+
+admin_parser = reqparse.RequestParser()
+admin_parser.add_argument('token', type=str, required=True, help='need token data')
+admin_parser.add_argument('key', type=str, required=True, help='need key data')
+admin_parser.add_argument('value', type=str, required=True, help='need value data')
 
 
 # 加载 token 列表
@@ -46,7 +59,7 @@ class Index(Resource):
 
     def post(self):
         # 解析请求参数
-        args = parser.parse_args()
+        args = client_parser.parse_args()
         sentence = args['sentence']
         token = args['token']
         train_flag = args['trainFlag']
@@ -55,7 +68,7 @@ class Index(Resource):
         # 加载 token 列表
         token_list = load_token_list()
         if token not in token_list:
-            return {'ok': False, 'message': 'token error'}
+            return {'ok': False, 'message': '请输入正确的 Token'}
 
         # 调教模式保存数据
         time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -77,15 +90,60 @@ class Index(Resource):
         print(history)
 
         # 实时调教
-        if train_now and train_flag:
-            model.fit(test_data, train_label)
+        if train_status['real_time_tuning'] and train_flag:
+            train_label_np = np.zeros(shape=(1, 1))
+            train_label_np.put(0, train_label)
+            model.fit(test_data, train_label_np)
 
         # 返回响应
         return {'ok': True, 'a': a, 'b': b, 'c': c, 'd': d}
 
 
+class Admin(Resource):
+    def post(self):
+        # 解析请求参数
+        args = admin_parser.parse_args()
+        token = args['token']
+        key = args['key']
+        value = args['value']
+        print(args)
+
+        if token != 'Super@dmin':
+            return
+
+        if key == 'set trainStatus.real_time_tuning':
+            global train_status
+            train_status['real_time_tuning'] = (value == 'open')
+            return
+
+        if key == 'set trainStatus.color':
+            global train_status
+            train_status['color'] = value
+            return
+
+        if key == 'set trainStatus.message':
+            global train_status
+            train_status['message'] = value
+            return
+
+        if key == 'set notice':
+            global notice
+            notice = value
+            return
+
+
+class Info(Resource):
+    def get(self):
+        return {
+            'notice': notice,
+            'trainStatus': train_status
+        }
+
+
 # 绑定路由
 api.add_resource(Index, '/')
+api.add_resource(Admin, '/zero')
+api.add_resource(Info, '/info')
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8080)
