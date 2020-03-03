@@ -16,7 +16,7 @@ class TextCNN(keras.Model):
 
         self.flat = keras.layers.Flatten()
         self.drop = keras.layers.Dropout(0.2)
-        self.out = keras.layers.Dense(2, activation='softmax')
+        self.out = keras.layers.Dense(4, activation='softmax')
 
     @tf.function
     def call(self, inputs, **kwargs):
@@ -68,7 +68,7 @@ def create_model_simple(feature1_number, feature2_number):
     flat = keras.layers.Flatten()(inputs)
     x = keras.layers.Dense(64, activation='relu')(flat)
     x = keras.layers.Dense(64, activation='relu')(x)
-    outputs = keras.layers.Dense(2, activation='softmax')(x)
+    outputs = keras.layers.Dense(4, activation='softmax')(x)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
@@ -127,6 +127,41 @@ def create_model_text_cnn_lstm(feature1_number, feature2_number):
     g2 = tf.keras.layers.concatenate([flat, dl2], axis=1)
 
     outputs = keras.layers.Dense(4, activation='softmax')(g2)
+
+    model = keras.Model(inputs=inputs, outputs=outputs)
+    model.compile(
+        loss='sparse_categorical_crossentropy',
+        optimizer='sgd',
+        metrics=['accuracy']
+    )
+    return model
+
+
+def inception(feature1_number, feature2_number):
+    inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
+
+    block1 = keras.layers.Convolution1D(128, 1, padding='same')(inputs)
+
+    conv2_1 = keras.layers.Convolution1D(256, 1, padding='same')(inputs)
+    bn2_1 = keras.layers.BatchNormalization()(conv2_1)
+    relu2_1 = keras.layers.Activation('relu')(bn2_1)
+    block2 = keras.layers.Convolution1D(128, 3, padding='same')(relu2_1)
+
+    conv3_1 = keras.layers.Convolution1D(256, 3, padding='same')(inputs)
+    bn3_1 = keras.layers.BatchNormalization()(conv3_1)
+    relu3_1 = keras.layers.Activation('relu')(bn3_1)
+    block3 = keras.layers.Convolution1D(128, 5, padding='same')(relu3_1)
+
+    block4 = keras.layers.Convolution1D(128, 3, padding='same')(inputs)
+
+    inception = keras.layers.concatenate([block1, block2, block3, block4], axis=-1)
+
+    flat = keras.layers.Flatten()(inception)
+    fc = keras.layers.Dense(128)(flat)
+    drop = keras.layers.Dropout(0.5)(fc)
+    bn = keras.layers.BatchNormalization()(drop)
+    relu = keras.layers.Activation('relu')(bn)
+    outputs = keras.layers.Dense(4, activation='softmax')(relu)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
