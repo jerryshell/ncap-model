@@ -22,9 +22,10 @@ train_status = {
 feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0
 feature2_number = 300  # 每个词语的向量
 
-print('model loading...')
 # 加载模型
-model = keras.models.load_model("save.h5")
+print('model loading...')
+model_file_name = 'save_text_cnn_lstm'
+model = keras.models.load_model(model_file_name + '.h5')
 
 # 加载数据
 print('vector loading...')
@@ -45,6 +46,13 @@ admin_parser = reqparse.RequestParser()
 admin_parser.add_argument('token', type=str, required=True, help='need token data')
 admin_parser.add_argument('key', type=str, required=True, help='need key data')
 admin_parser.add_argument('value', type=str, required=True, help='need value data')
+
+snapshot_parser = reqparse.RequestParser()
+snapshot_parser.add_argument('token', type=str, required=True, help='need token data')
+
+mdreload_parser = reqparse.RequestParser()
+mdreload_parser.add_argument('token', type=str, required=True, help='need token data')
+mdreload_parser.add_argument('name', type=str, required=True, help='need name data')
 
 
 # 加载 token 列表
@@ -140,10 +148,34 @@ class Info(Resource):
         }
 
 
+class Snapshot(Resource):
+    def post(self):
+        args = snapshot_parser.parse_args()
+        token = args['token']
+        if token != 'Super@dmin':
+            return
+        time_str = time.strftime("%Y-%m-%d.%H.%M.%S", time.localtime())
+        model.save(model_file_name + '.' + time_str + '.h5')
+
+
+class MDReload(Resource):
+    def post(self):
+        args = mdreload_parser.parse_args()
+        token = args['token']
+        name = args['name']
+        if token != 'Super@dmin':
+            return
+        new_model = keras.models.load_model(name + '.h5')
+        global model
+        model = new_model
+
+
 # 绑定路由
 api.add_resource(Index, '/')
 api.add_resource(Admin, '/zero')
 api.add_resource(Info, '/info')
+api.add_resource(Snapshot, '/snapshot')
+api.add_resource(MDReload, '/mdreload')
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    app.run(host='0.0.0.0', port=8848)
