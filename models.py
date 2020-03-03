@@ -41,13 +41,13 @@ def create_model_text_cnn(feature1_number, feature2_number):
     inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
 
     cnn1 = keras.layers.Conv1D(256, 3, padding='same', strides=1, activation='relu')(inputs)
-    cnn1 = keras.layers.MaxPooling1D(pool_size=48)(cnn1)
+    cnn1 = keras.layers.MaxPooling1D(pool_size=38)(cnn1)
 
     cnn2 = keras.layers.Conv1D(256, 4, padding='same', strides=1, activation='relu')(inputs)
-    cnn2 = keras.layers.MaxPooling1D(pool_size=47)(cnn2)
+    cnn2 = keras.layers.MaxPooling1D(pool_size=37)(cnn2)
 
     cnn3 = keras.layers.Conv1D(256, 5, padding='same', strides=1, activation='relu')(inputs)
-    cnn3 = keras.layers.MaxPooling1D(pool_size=46)(cnn3)
+    cnn3 = keras.layers.MaxPooling1D(pool_size=36)(cnn3)
 
     cnn = keras.layers.concatenate([cnn1, cnn2, cnn3], axis=-1)
     flat = keras.layers.Flatten()(cnn)
@@ -89,6 +89,44 @@ def create_model_rnn(feature1_number, feature2_number):
     btn = tf.keras.layers.BatchNormalization()(lstm)
 
     outputs = keras.layers.Dense(4, activation='softmax')(btn)
+
+    model = keras.Model(inputs=inputs, outputs=outputs)
+    model.compile(
+        loss='sparse_categorical_crossentropy',
+        optimizer='sgd',
+        metrics=['accuracy']
+    )
+    return model
+
+
+def create_model_text_cnn_lstm(feature1_number, feature2_number):
+    inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
+
+    cnn1 = keras.layers.Conv1D(256, 3, padding='same', strides=1, activation='relu')(inputs)
+    cnn1 = keras.layers.MaxPooling1D(pool_size=48)(cnn1)
+
+    cnn2 = keras.layers.Conv1D(256, 4, padding='same', strides=1, activation='relu')(inputs)
+    cnn2 = keras.layers.MaxPooling1D(pool_size=47)(cnn2)
+
+    cnn3 = keras.layers.Conv1D(256, 5, padding='same', strides=1, activation='relu')(inputs)
+    cnn3 = keras.layers.MaxPooling1D(pool_size=46)(cnn3)
+
+    cnn = keras.layers.concatenate([cnn1, cnn2, cnn3], axis=-1)
+    flat = keras.layers.Flatten()(cnn)
+
+    lstm1 = keras.layers.LSTM(
+        128,
+        activation='tanh',
+        return_sequences=False
+    )(inputs)
+    dl1 = keras.layers.Dropout(0.3)(lstm1)
+
+    den1 = keras.layers.Dense(200, activation="relu")(dl1)
+    dl2 = keras.layers.Dropout(0.3)(den1)
+
+    g2 = tf.keras.layers.concatenate([flat, dl2], axis=1)
+
+    outputs = keras.layers.Dense(4, activation='softmax')(g2)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
