@@ -24,7 +24,7 @@ feature2_number = 300  # 每个词语的向量
 
 # 加载模型
 print('model loading...')
-model_file_name = 'save_text_cnn_lstm'
+model_file_name = 'save_text_cnn'
 model = keras.models.load_model(model_file_name + '.h5')
 
 # 加载数据
@@ -83,6 +83,12 @@ class Index(Resource):
         if train_flag:
             extra_data = '%s,%s,%s,%s' % (train_label, sentence, time_str, token)
             os.system('echo "%s" >> extra_data' % extra_data)
+            # 实时调教
+            if train_status['real_time_tuning']:
+                train_label_np = np.zeros(shape=(1, 1))
+                train_label_np.put(0, train_label)
+                test_data = data_helper.sentence2test_data(sentence)
+                model.fit(test_data, train_label_np)
 
         # 调用模型获得结果
         test_data = data_helper.sentence2test_data(sentence)
@@ -96,12 +102,6 @@ class Index(Resource):
         history = '%s %s %s %s %s %s %s' % (token, time_str, sentence, a, b, c, d)
         os.system('echo "%s" >> history' % history)
         print(history)
-
-        # 实时调教
-        if train_status['real_time_tuning'] and train_flag:
-            train_label_np = np.zeros(shape=(1, 1))
-            train_label_np.put(0, train_label)
-            model.fit(test_data, train_label_np)
 
         # 返回响应
         return {'ok': True, 'a': a, 'b': b, 'c': c, 'd': d}
