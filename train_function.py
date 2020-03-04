@@ -1,6 +1,6 @@
 from data_helper import DataHelper
 from data_loader import DataLoader
-from models import inception
+from models import create_model_text_cnn
 
 # 超参数
 feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0
@@ -13,7 +13,7 @@ print('vector loading...')
 data_helper = DataHelper(feature1_number, feature2_number)
 
 # 模型
-model = inception(feature1_number, feature2_number)
+model = create_model_text_cnn(feature1_number, feature2_number)
 
 # 加载数据
 epoch = 20
@@ -34,4 +34,4 @@ for batch_index in range(num_batch):
     model.evaluate(X, y)
 
 # 保存
-model.save('inception.h5')
+model.save('text_cnn.h5')
