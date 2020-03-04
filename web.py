@@ -6,6 +6,8 @@ import tensorflow.keras as keras
 from flask import Flask, request
 from flask_restful import reqparse, Api, Resource
 
+from data_helper import DataHelper
+
 # 网站公告
 notice = ''
 
@@ -27,8 +29,7 @@ model = keras.models.load_model(model_file_name + '.h5')
 
 # 加载数据
 print('vector loading...')
-# data_helper = DataHelper(feature1_number, feature2_number)
-data_helper = None
+data_helper = DataHelper(feature1_number, feature2_number)
 
 # flask 初始化
 app = Flask(__name__)
