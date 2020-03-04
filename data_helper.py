@@ -28,11 +28,18 @@ class DataHelper:
             # print(word_list_len)
             # 从最后一个词开始填充 vector
             vector = np.zeros(shape=(self.feature1_number, self.feature2_number))
-            for i in range(self.feature1_number):
-                if i < word_list_len:
-                    word = word_list[word_list_len - 1 - i]
-                    vec = self.word2vec(word)
-                    vector[self.feature1_number - 1 - i] = vec
+            if word_list_len <= self.feature1_number:
+                for i in range(self.feature1_number):
+                    if i < word_list_len:
+                        word = word_list[word_list_len - 1 - i]
+                        vec = self.word2vec(word)
+                        vector[self.feature1_number - 1 - i] = vec
+            else:
+                for i in range(self.feature1_number):
+                    if i < word_list_len:
+                        word = word_list[i]
+                        vec = self.word2vec(word)
+                        vector[i] = vec
             batch_label[batch_index] = label
             batch_data[batch_index] = vector
             # print(vector)
@@ -49,12 +56,20 @@ class DataHelper:
         word_list_len = len(word_list)
         print(word_list)
         # print(word_list_len)
+        # 从最后一个词开始填充 vector
         vector = np.zeros(shape=(self.feature1_number, self.feature2_number))
-        for i in range(self.feature1_number):
-            if i < word_list_len:
-                word = word_list[word_list_len - 1 - i]
-                vec = self.word2vec(word)
-                vector[self.feature1_number - 1 - i] = vec
+        if word_list_len <= self.feature1_number:
+            for i in range(self.feature1_number):
+                if i < word_list_len:
+                    word = word_list[word_list_len - 1 - i]
+                    vec = self.word2vec(word)
+                    vector[self.feature1_number - 1 - i] = vec
+        else:
+            for i in range(self.feature1_number):
+                if i < word_list_len:
+                    word = word_list[i]
+                    vec = self.word2vec(word)
+                    vector[i] = vec
         # print(vector)
         return vector
 

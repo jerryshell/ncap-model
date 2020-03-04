@@ -16,7 +16,7 @@ data_helper = DataHelper(feature1_number, feature2_number)
 model = create_model_text_cnn(feature1_number, feature2_number)
 
 # 加载数据
-epoch = 20
+epoch = 1
 batch_size = 50
 num_data = data_loader.num_train_data
 num_batch = num_data // batch_size * epoch
