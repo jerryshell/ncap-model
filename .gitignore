@@ -1,4 +1,5 @@
 .idea
+__pycache__
 data
 save
 sgns.wiki.bigram-char
