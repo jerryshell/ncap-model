@@ -3,10 +3,8 @@ import time
 
 import numpy as np
 import tensorflow.keras as keras
-from flask import Flask
+from flask import Flask, request
 from flask_restful import reqparse, Api, Resource
-
-from data_helper import DataHelper
 
 # 网站公告
 notice = ''
@@ -29,11 +27,25 @@ model = keras.models.load_model(model_file_name + '.h5')
 
 # 加载数据
 print('vector loading...')
-data_helper = DataHelper(feature1_number, feature2_number)
+# data_helper = DataHelper(feature1_number, feature2_number)
+data_helper = None
 
 # flask 初始化
 app = Flask(__name__)
 api = Api(app)
+
+
+@app.after_request
+def after_request(response):
+    # 允许跨域
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    if request.method == 'OPTIONS':
+        response.headers['Access-Control-Allow-Methods'] = 'POST, DELETE, PUT, GET'
+        headers = request.headers.get('Access-Control-Request-Headers')
+        if headers:
+            response.headers['Access-Control-Allow-Headers'] = headers
+    return response
+
 
 # 请求参数处理器
 client_parser = reqparse.RequestParser()
@@ -109,6 +121,7 @@ class Index(Resource):
 
 class Admin(Resource):
     def post(self):
+        global train_status
         # 解析请求参数
         args = admin_parser.parse_args()
         token = args['token']
@@ -120,17 +133,14 @@ class Admin(Resource):
             return
 
         if key == 'set trainStatus.real_time_tuning':
-            global train_status
             train_status['real_time_tuning'] = (value == 'open')
             return
 
         if key == 'set trainStatus.color':
-            global train_status
             train_status['color'] = value
             return
 
         if key == 'set trainStatus.message':
-            global train_status
             train_status['message'] = value
             return
 
