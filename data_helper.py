@@ -18,7 +18,7 @@ class DataHelper:
             return self.gensim_model.get_vector(word)
         return np.zeros(shape=(self.feature2_number,), dtype=np.float32)
 
-    def word_list2vector(self, word_list):
+    def word_list2vector2(self, word_list):
         # 从最后一个词开始填充 vector
         word_list_len = len(word_list)
         # print(word_list_len)
@@ -35,6 +35,19 @@ class DataHelper:
                     word = word_list[i]
                     vec = self.word2vec(word)
                     vector[i] = vec
+        return vector
+
+    def word_list2vector(self, word_list):
+        word_list_len = len(word_list)
+        # print(word_list_len)
+        vector = np.zeros(shape=(self.feature1_number, self.feature2_number))
+        for i in range(self.feature1_number):
+            if i < word_list_len:
+                word = word_list[i]
+                vec = self.word2vec(word)
+                vector[i] = vec
+            else:
+                break
         return vector
 
     def get_batch_label_and_vector(self, data_loader: DataLoader, batch_size):

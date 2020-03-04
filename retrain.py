@@ -1,6 +1,7 @@
+import tensorflow.keras as keras
+
 from data_helper import DataHelper
 from data_loader import DataLoader
-from models import create_model_text_cnn
 
 # 超参数
 feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0
@@ -13,7 +14,9 @@ print('vector loading...')
 data_helper = DataHelper(feature1_number, feature2_number)
 
 # 模型
-model = create_model_text_cnn(feature1_number, feature2_number)
+print('model loading...')
+model_file_name = 'text_cnn'
+model = keras.models.load_model(model_file_name + '.h5')
 
 # 加载数据
 epoch = 10
