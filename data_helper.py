@@ -4,6 +4,8 @@ import jieba
 import numpy as np
 from gensim.models.keyedvectors import KeyedVectors
 
+from data_loader import DataLoader
+
 
 class DataHelper:
     def __init__(self, feature1_number, feature2_number):
@@ -16,47 +18,10 @@ class DataHelper:
             return self.gensim_model.get_vector(word)
         return np.zeros(shape=(self.feature2_number,), dtype=np.float32)
 
-    def get_batch_label_and_vector(self, data_loader, batch_size):
-        batch_label = np.zeros(shape=(batch_size,))
-        batch_data = np.zeros(shape=(batch_size, self.feature1_number, self.feature2_number))
-        for batch_index in range(batch_size):
-            label, sentence = data_loader.next()
-            # print(label, sentence)
-            word_list = sentence.split(' ')
-            word_list_len = len(word_list)
-            # print(word_list)
-            # print(word_list_len)
-            # 从最后一个词开始填充 vector
-            vector = np.zeros(shape=(self.feature1_number, self.feature2_number))
-            if word_list_len <= self.feature1_number:
-                for i in range(self.feature1_number):
-                    if i < word_list_len:
-                        word = word_list[word_list_len - 1 - i]
-                        vec = self.word2vec(word)
-                        vector[self.feature1_number - 1 - i] = vec
-            else:
-                for i in range(self.feature1_number):
-                    if i < word_list_len:
-                        word = word_list[i]
-                        vec = self.word2vec(word)
-                        vector[i] = vec
-            batch_label[batch_index] = label
-            batch_data[batch_index] = vector
-            # print(vector)
-        return batch_label, batch_data
-
-    # 将一句话转成向量
-    def sentence2vector(self, sentence):
-        # 去特殊字符
-        sentence = re.sub(r'\W+', ' ', sentence).replace('_', ' ')
-        # 分词
-        word_list = jieba.lcut(sentence)
-        # 去空格
-        word_list = [item for item in word_list if item != ' ']
-        word_list_len = len(word_list)
-        print(word_list)
-        # print(word_list_len)
+    def word_list2vector(self, word_list):
         # 从最后一个词开始填充 vector
+        word_list_len = len(word_list)
+        # print(word_list_len)
         vector = np.zeros(shape=(self.feature1_number, self.feature2_number))
         if word_list_len <= self.feature1_number:
             for i in range(self.feature1_number):
@@ -70,6 +35,32 @@ class DataHelper:
                     word = word_list[i]
                     vec = self.word2vec(word)
                     vector[i] = vec
+        return vector
+
+    def get_batch_label_and_vector(self, data_loader: DataLoader, batch_size):
+        batch_label = np.zeros(shape=(batch_size,))
+        batch_data = np.zeros(shape=(batch_size, self.feature1_number, self.feature2_number))
+        for batch_index in range(batch_size):
+            label, sentence = data_loader.next()
+            # print(label, sentence)
+            word_list = sentence.split(' ')
+            # print(word_list)
+            vector = self.word_list2vector(word_list)
+            batch_label[batch_index] = label
+            batch_data[batch_index] = vector
+            # print(vector)
+        return batch_label, batch_data
+
+    # 将一句话转成向量
+    def sentence2vector(self, sentence):
+        # 去特殊字符
+        sentence = re.sub(r'\W+', ' ', sentence).replace('_', ' ')
+        # 分词
+        word_list = jieba.lcut(sentence)
+        # 去空格
+        word_list = [item for item in word_list if item != ' ']
+        print(word_list)
+        vector = self.word_list2vector(word_list)
         # print(vector)
         return vector
 
@@ -81,7 +72,6 @@ class DataHelper:
 
 
 if __name__ == '__main__':
-    from data_loader import DataLoader
     import sys
 
     feature1_number = 60
