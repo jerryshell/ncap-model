@@ -24,7 +24,7 @@ feature2_number = 300  # 每个词语的向量
 
 # 加载模型
 print('model loading...')
-model_file_name = 'save_text_cnn'
+model_file_name = 'text_cnn'
 model = keras.models.load_model(model_file_name + '.h5')
 
 # 加载数据
