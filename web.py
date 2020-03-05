@@ -81,7 +81,8 @@ class Index(Resource):
     def post(self):
         # 解析请求参数
         args = client_parser.parse_args()
-        sentence = args['sentence']
+        sentence_list = args['sentence'].split('\n')
+        print('sentence_list', sentence_list)
         token = args['token']
         train_flag = args['trainFlag']
         train_label = args['trainLabel']
@@ -91,33 +92,52 @@ class Index(Resource):
         if token not in token_list:
             return {'ok': False, 'message': '请输入正确的 Token'}
 
-        # 调教模式保存数据
-        time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
-        if train_flag:
-            extra_data = '%s,%s,%s,%s' % (train_label, sentence, time_str, token)
-            os.system('echo "%s" >> extra_data' % extra_data)
-            # 实时调教
-            if train_status['real_time_tuning']:
-                train_label_np = np.zeros(shape=(1, 1))
-                train_label_np.put(0, train_label)
-                test_data = data_helper.sentence2test_data(sentence)
-                model.fit(test_data, train_label_np)
+        sentence_list_len = len(sentence_list)
+        if sentence_list_len > 1:
+            train_flag = False
 
-        # 调用模型获得结果
-        test_data = data_helper.sentence2test_data(sentence)
-        result = model.predict(test_data)
-        a = result[0][0] * 100
-        b = result[0][1] * 100
-        c = result[0][2] * 100
-        d = result[0][3] * 100
+        a_total = 0.0
+        b_total = 0.0
+        c_total = 0.0
+        d_total = 0.0
+        for sentence in sentence_list:
+            # 调教模式保存数据
+            time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
+            if train_flag:
+                extra_data = '%s,%s,%s,%s' % (train_label, sentence, time_str, token)
+                os.system('echo "%s" >> extra_data' % extra_data)
+                # 实时调教
+                if train_status['real_time_tuning']:
+                    train_label_np = np.zeros(shape=(1, 1))
+                    train_label_np.put(0, train_label)
+                    test_data = data_helper.sentence2test_data(sentence)
+                    model.fit(test_data, train_label_np)
 
-        # 保存历史记录
-        history = '%s %s %s %s %s %s %s' % (token, time_str, sentence, a, b, c, d)
-        os.system('echo "%s" >> history' % history)
-        print(history)
+            # 调用模型获得结果
+            test_data = data_helper.sentence2test_data(sentence)
+            result = model.predict(test_data)
+            a = result[0][0] * 100
+            b = result[0][1] * 100
+            c = result[0][2] * 100
+            d = result[0][3] * 100
 
+            # 保存历史记录
+            history = '%s %s %s %s %s %s %s' % (token, time_str, sentence, a, b, c, d)
+            os.system('echo "%s" >> history' % history)
+            print(history)
+
+            # 统计概率总和
+            a_total += a
+            b_total += b
+            c_total += c
+            d_total += d
+
+        a_total /= sentence_list_len
+        b_total /= sentence_list_len
+        c_total /= sentence_list_len
+        d_total /= sentence_list_len
         # 返回响应
-        return {'ok': True, 'a': a, 'b': b, 'c': c, 'd': d}
+        return {'ok': True, 'a': a_total, 'b': b_total, 'c': c_total, 'd': d_total}
 
 
 class Admin(Resource):

@@ -7,7 +7,7 @@
 ## 依赖
 
 ```bash
-pip3 install --upgrade tensorflow gensim numpy jieba pandas
+pip3 install --upgrade tensorflow gensim numpy jieba pandas flask-restful
 ```
 
 ## 参考
