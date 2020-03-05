@@ -20,13 +20,16 @@ model = keras.models.load_model(model_file_name + '.h5')
 
 # 加载数据
 epoch = 10
-batch_size = 500
+batch_size = 200
 num_data = data_loader.num_train_data
 num_batch = num_data // batch_size * epoch
 for batch_index in range(num_batch):
     print('%s / %s' % (batch_index, num_batch))
     y, X = data_helper.get_batch_label_and_vector(data_loader, batch_size)
-    model.fit(X, y, batch_size=10)
+    model.fit(X, y)
+    if batch_index % 10 == 0:
+        print('model saved')
+        model.save('text_cnn.h5')
 
 # 测试
 num_data = int(data_loader.num_train_data / 2)
