@@ -20,7 +20,7 @@ model = keras.models.load_model(model_file_name + '.h5')
 
 # 加载数据
 epoch = 10
-batch_size = 200
+batch_size = 100
 num_data = data_loader.num_train_data
 num_batch = num_data // batch_size * epoch
 for batch_index in range(num_batch):
