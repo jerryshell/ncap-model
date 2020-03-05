@@ -20,7 +20,7 @@ model = keras.models.load_model(model_file_name + '.h5')
 
 # 加载数据
 epoch = 10
-batch_size = 100
+batch_size = 1000
 num_data = data_loader.num_train_data
 num_batch = num_data // batch_size * epoch
 for batch_index in range(num_batch):
@@ -32,7 +32,7 @@ for batch_index in range(num_batch):
         model.save('text_cnn.h5')
 
 # 测试
-num_data = int(data_loader.num_train_data / 2)
+num_data = int(data_loader.num_train_data / 10)
 num_batch = num_data // batch_size
 for batch_index in range(num_batch):
     print('%s / %s' % (batch_index, num_batch))
