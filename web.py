@@ -36,6 +36,7 @@ app = Flask(__name__)
 api = Api(app)
 
 
+# 配置跨域
 @app.after_request
 def after_request(response):
     # 允许跨域
@@ -74,6 +75,7 @@ def load_token_list():
         return [token.strip() for token in f.readlines()]
 
 
+# 主接口
 class Index(Resource):
     def get(self):
         return {'Auth': 'Jerry', 'GitHub': 'https://github.com/jerryshell'}
@@ -82,7 +84,6 @@ class Index(Resource):
         # 解析请求参数
         args = client_parser.parse_args()
         sentence_list = args['sentence'].split('\n')
-        print('sentence_list', sentence_list)
         token = args['token']
         train_flag = args['trainFlag']
         train_label = args['trainLabel']
@@ -92,14 +93,18 @@ class Index(Resource):
         if token not in token_list:
             return {'ok': False, 'message': '请输入正确的 Token'}
 
+        # 多行使用时强制停用调教模式
         sentence_list_len = len(sentence_list)
         if sentence_list_len > 1:
             train_flag = False
 
+        # 概率初始化
         a_total = 0.0
         b_total = 0.0
         c_total = 0.0
         d_total = 0.0
+
+        # 循环通过模型得到概率
         for sentence in sentence_list:
             # 调教模式保存数据
             time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
@@ -132,14 +137,17 @@ class Index(Resource):
             c_total += c
             d_total += d
 
+        # 计算概率
         a_total /= sentence_list_len
         b_total /= sentence_list_len
         c_total /= sentence_list_len
         d_total /= sentence_list_len
+
         # 返回响应
         return {'ok': True, 'a': a_total, 'b': b_total, 'c': c_total, 'd': d_total}
 
 
+# 管理接口
 class Admin(Resource):
     def post(self):
         global train_status
@@ -171,6 +179,7 @@ class Admin(Resource):
             return
 
 
+# 服务器信息接口
 class Info(Resource):
     def get(self):
         return {
@@ -179,6 +188,7 @@ class Info(Resource):
         }
 
 
+# 快照接口
 class Snapshot(Resource):
     def post(self):
         args = snapshot_parser.parse_args()
@@ -189,6 +199,7 @@ class Snapshot(Resource):
         model.save(model_file_name + '.' + time_str + '.h5')
 
 
+# 重载模型接口
 class MDReload(Resource):
     def post(self):
         args = mdreload_parser.parse_args()
