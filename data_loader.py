@@ -14,7 +14,7 @@ class DataLoader:
 
     def next(self):
         index = np.random.randint(0, self.num_train_data)
-        if index <= 199496:
-            index = np.random.randint(0, self.num_train_data)
-        # label = 0 if 0 == self.train_label[index] else 1
-        return self.train_label[index], self.train_data[index]
+        # if index <= 199496:
+        #     index = np.random.randint(0, self.num_train_data)
+        label = 0 if 0 == self.train_label[index] else 1
+        return label, self.train_data[index]
