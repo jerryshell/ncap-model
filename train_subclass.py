@@ -1,20 +1,18 @@
 import tensorflow as tf
 import tensorflow.keras as keras
 
+import config
 from data_helper import DataHelper
 from data_loader import DataLoader
 from models import TextCNN
 
-# 超参数
-feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0
-feature2_number = 300  # 每个词语的向量
 batch_size = 10
 
 # 数据加载工具
 print('data loading...')
 data_loader = DataLoader()
 print('vector loading...')
-data_helper = DataHelper(feature1_number, feature2_number)
+data_helper = DataHelper(config.feature1_number, config.feature2_number)
 
 # 模型
 model = TextCNN()

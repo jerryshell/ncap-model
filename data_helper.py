@@ -86,10 +86,9 @@ class DataHelper:
 
 if __name__ == '__main__':
     import sys
+    import config
 
-    feature1_number = 60
-    feature2_number = 300
     data_loader = DataLoader()
-    data_helper = DataHelper(feature1_number, feature2_number)
+    data_helper = DataHelper(config.feature1_number, config.feature2_number)
     np.set_printoptions(threshold=sys.maxsize)  # 强制打印 numpy 的整个数组
     print(data_helper.get_batch_label_and_vector(data_loader, 100))

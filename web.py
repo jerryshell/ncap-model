@@ -6,6 +6,7 @@ import tensorflow.keras as keras
 from flask import Flask, request
 from flask_restful import reqparse, Api, Resource
 
+import config
 from data_helper import DataHelper
 
 # 网站公告
@@ -18,10 +19,6 @@ train_status = {
     'message': '调教参数实时更新',  # 公告信息
 }
 
-# 超参数
-feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0
-feature2_number = 300  # 每个词语的向量
-
 # 加载模型
 print('model loading...')
 model_file_name = 'text_cnn'
@@ -29,7 +26,7 @@ model = keras.models.load_model(model_file_name + '.h5')
 
 # 加载数据
 print('vector loading...')
-data_helper = DataHelper(feature1_number, feature2_number)
+data_helper = DataHelper(config.feature1_number, config.feature2_number)
 
 # flask 初始化
 app = Flask(__name__)

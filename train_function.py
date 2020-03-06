@@ -1,19 +1,16 @@
+import config
 from data_helper import DataHelper
 from data_loader import DataLoader
 from models import create_model_text_cnn
-
-# 超参数
-feature1_number = 60  # 句子分成多少个词语，多余截断，不够补 0
-feature2_number = 300  # 每个词语的向量
 
 # 数据加载工具
 print('data loading...')
 data_loader = DataLoader()
 print('vector loading...')
-data_helper = DataHelper(feature1_number, feature2_number)
+data_helper = DataHelper(config.feature1_number, config.feature2_number)
 
 # 模型
-model = create_model_text_cnn(feature1_number, feature2_number)
+model = create_model_text_cnn(config.feature1_number, config.feature2_number)
 
 # 加载数据
 epoch = 10
