@@ -16,7 +16,7 @@ class TextCNN(keras.Model):
 
         self.flat = keras.layers.Flatten()
         self.drop = keras.layers.Dropout(0.2)
-        self.out = keras.layers.Dense(4, activation='softmax')
+        self.out = keras.layers.Dense(2, activation='softmax')
 
     @tf.function
     def call(self, inputs, **kwargs):
@@ -68,70 +68,12 @@ def create_model_simple(feature1_number, feature2_number):
     flat = keras.layers.Flatten()(inputs)
     x = keras.layers.Dense(64, activation='relu')(flat)
     x = keras.layers.Dense(64, activation='relu')(x)
-    outputs = keras.layers.Dense(4, activation='softmax')(x)
+    outputs = keras.layers.Dense(2, activation='softmax')(x)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
         loss='sparse_categorical_crossentropy',
         optimizer='adam',
-        metrics=['accuracy']
-    )
-    return model
-
-
-def create_model_rnn(feature1_number, feature2_number):
-    inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
-
-    lstm = tf.keras.layers.RNN(
-        tf.keras.layers.LSTMCell(128)
-    )(inputs)
-
-    btn = tf.keras.layers.BatchNormalization()(lstm)
-
-    outputs = keras.layers.Dense(4, activation='softmax')(btn)
-
-    model = keras.Model(inputs=inputs, outputs=outputs)
-    model.compile(
-        loss='sparse_categorical_crossentropy',
-        optimizer='sgd',
-        metrics=['accuracy']
-    )
-    return model
-
-
-def create_model_text_cnn_lstm(feature1_number, feature2_number):
-    inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
-
-    cnn1 = keras.layers.Conv1D(256, 3, padding='same', strides=1, activation='relu')(inputs)
-    cnn1 = keras.layers.MaxPooling1D(pool_size=48)(cnn1)
-
-    cnn2 = keras.layers.Conv1D(256, 4, padding='same', strides=1, activation='relu')(inputs)
-    cnn2 = keras.layers.MaxPooling1D(pool_size=47)(cnn2)
-
-    cnn3 = keras.layers.Conv1D(256, 5, padding='same', strides=1, activation='relu')(inputs)
-    cnn3 = keras.layers.MaxPooling1D(pool_size=46)(cnn3)
-
-    cnn = keras.layers.concatenate([cnn1, cnn2, cnn3], axis=-1)
-    flat = keras.layers.Flatten()(cnn)
-
-    lstm1 = keras.layers.LSTM(
-        128,
-        activation='tanh',
-        return_sequences=False
-    )(inputs)
-    dl1 = keras.layers.Dropout(0.3)(lstm1)
-
-    den1 = keras.layers.Dense(200, activation="relu")(dl1)
-    dl2 = keras.layers.Dropout(0.3)(den1)
-
-    g2 = tf.keras.layers.concatenate([flat, dl2], axis=1)
-
-    outputs = keras.layers.Dense(4, activation='softmax')(g2)
-
-    model = keras.Model(inputs=inputs, outputs=outputs)
-    model.compile(
-        loss='sparse_categorical_crossentropy',
-        optimizer='sgd',
         metrics=['accuracy']
     )
     return model
@@ -161,7 +103,7 @@ def inception(feature1_number, feature2_number):
     drop = keras.layers.Dropout(0.5)(fc)
     bn = keras.layers.BatchNormalization()(drop)
     relu = keras.layers.Activation('relu')(bn)
-    outputs = keras.layers.Dense(4, activation='softmax')(relu)
+    outputs = keras.layers.Dense(2, activation='softmax')(relu)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
