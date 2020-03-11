@@ -18,3 +18,4 @@ pip3 install --upgrade tensorflow gensim numpy jieba pandas flask-restful
 * https://trickygo.github.io/Dive-into-DL-TensorFlow2.0
 * https://www.zybuluo.com/Dounm/note/591752
 * https://zhuanlan.zhihu.com/p/54397748
+* https://www.cnblogs.com/jiangxinyang/p/10241243.html
