@@ -43,8 +43,8 @@ for batch_index in range(num_batch):
 
 # 测试
 print('testing...')
-print(model.predict(data_helper.sentence2test_data('我好开心')))
-print(model.predict(data_helper.sentence2test_data('我很失望')))
+print(model.predict(data_helper.sentence2batch_vector('我好开心')))
+print(model.predict(data_helper.sentence2batch_vector('我很失望')))
 
 num_test_data = 1000
 test_batch_size = 1

@@ -112,11 +112,11 @@ class Index(Resource):
                 if train_status['real_time_tuning']:
                     train_label_np = np.zeros(shape=(1, 1))
                     train_label_np.put(0, train_label)
-                    test_data = data_helper.sentence2test_data(sentence)
+                    test_data = data_helper.sentence2batch_vector(sentence)
                     model.fit(test_data, train_label_np)
 
             # 调用模型获得结果
-            test_data = data_helper.sentence2test_data(sentence)
+            test_data = data_helper.sentence2batch_vector(sentence)
             result = model.predict(test_data)
             a = result[0][0] * 100
             b = result[0][1] * 100

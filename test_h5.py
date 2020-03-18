@@ -11,7 +11,7 @@ data_helper = DataHelper(config.feature1_number, config.feature2_number)
 
 while True:
     user_input = input('>>> ')
-    test_data = data_helper.sentence2test_data(user_input)
+    test_data = data_helper.sentence2batch_vector(user_input)
     result = model.predict(test_data)
     a = result[0][0] * 100
     b = result[0][1] * 100
