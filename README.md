@@ -6,7 +6,7 @@
 ## 依赖
 
 ```bash
-pip3 install --upgrade tensorflow gensim numpy jieba pandas flask-restful
+pip3 install --upgrade tensorflow keras pandas numpy jieba gensim fastapi uvicorn
 ```
 
 ## 参考
