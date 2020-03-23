@@ -63,6 +63,32 @@ def create_model_text_cnn(feature1_number, feature2_number):
     return model
 
 
+def create_model_text_cnn_separable(feature1_number, feature2_number):
+    inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
+
+    cnn1 = keras.layers.SeparableConv1D(256, 3, padding='same', strides=1, activation='relu')(inputs)
+    cnn1 = keras.layers.MaxPooling1D(pool_size=38)(cnn1)
+
+    cnn2 = keras.layers.SeparableConv1D(256, 4, padding='same', strides=1, activation='relu')(inputs)
+    cnn2 = keras.layers.MaxPooling1D(pool_size=37)(cnn2)
+
+    cnn3 = keras.layers.SeparableConv1D(256, 5, padding='same', strides=1, activation='relu')(inputs)
+    cnn3 = keras.layers.MaxPooling1D(pool_size=36)(cnn3)
+
+    cnn = keras.layers.concatenate([cnn1, cnn2, cnn3], axis=-1)
+    flat = keras.layers.Flatten()(cnn)
+    drop = keras.layers.Dropout(0.2)(flat)
+    outputs = keras.layers.Dense(2, activation='softmax')(drop)
+
+    model = keras.Model(inputs=inputs, outputs=outputs)
+    model.compile(
+        loss='sparse_categorical_crossentropy',
+        optimizer='adam',
+        metrics=['accuracy']
+    )
+    return model
+
+
 def create_model_simple(feature1_number, feature2_number):
     inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
     flat = keras.layers.Flatten()(inputs)

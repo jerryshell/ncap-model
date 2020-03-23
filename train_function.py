@@ -1,7 +1,7 @@
 import config
 from data_helper import DataHelper
 from data_loader import DataLoader
-from models import create_model_text_cnn
+from models import create_model_text_cnn_separable
 
 # 数据加载工具
 print('data loading...')
@@ -10,7 +10,7 @@ print('vector loading...')
 data_helper = DataHelper(config.feature1_number, config.feature2_number)
 
 # 模型
-model = create_model_text_cnn(config.feature1_number, config.feature2_number)
+model = create_model_text_cnn_separable(config.feature1_number, config.feature2_number)
 
 # 加载数据
 epoch = 10
@@ -31,4 +31,4 @@ for batch_index in range(num_batch):
     model.evaluate(X, y)
 
 # 保存
-model.save('text_cnn.h5')
+model.save('text_cnn_separable.h5')
