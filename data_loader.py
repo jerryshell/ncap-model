@@ -10,27 +10,28 @@ class DataLoader:
         print(data.describe())
 
         # 打乱数据集
-        data = np.array(data)
-        np.random.shuffle(data)
-
-        # 拆分数据和标签
-        self.y = data[:, 0]
-        self.x = data[:, 1]
+        self.data = np.array(data)
+        np.random.shuffle(self.data)
 
         # 记录数据集的最大数量
-        self.num_data = len(self.x)
+        self.num_data = len(self.data)
 
         # 迭代索引
         self.next_index = 0
 
     def next(self):
         # 0 为正面情感，其他为负面情感转为 1
-        y = self.y[self.next_index]
+        item = self.data[self.next_index]
+        y = item[0]
         if y > 0:
             y = 1
-        x = self.x[self.next_index]
+        x = item[1]
         # next_index 自增
-        self.next_index = (self.next_index + 1) % self.num_data
+        self.next_index += 1
+        # 使用完一轮之后再次打乱数据，并重置 next_index
+        if self.next_index == self.num_data:
+            np.random.shuffle(self.data)
+            self.next_index = 0
         return y, x
 
 
