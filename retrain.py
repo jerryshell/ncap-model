@@ -12,12 +12,12 @@ data_helper = DataHelper(config.feature1_number, config.feature2_number)
 
 # 模型
 print('model loading...')
-model_file_name = 'text_cnn'
+model_file_name = 'text_cnn_separable'
 model = keras.models.load_model(model_file_name + '.h5')
 
 # 加载数据
-epoch = 1
-batch_size = 500
+epoch = 10
+batch_size = 1000
 num_data = data_loader.num_data
 num_batch = num_data // batch_size * epoch
 for batch_index in range(num_batch):
