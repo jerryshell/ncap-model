@@ -67,7 +67,7 @@ class SnapshotForm(BaseModel):
 # model reload form
 class ModelReloadForm(BaseModel):
     token: str
-    name: str
+    model_file_name: str
 
 
 # 加载 token 列表
@@ -178,7 +178,8 @@ def admin(form: AdminForm):
 def info():
     return {
         'notice': notice,
-        'trainStatus': train_status
+        'trainStatus': train_status,
+        'model_file_name': model_file_name
     }
 
 
@@ -196,10 +197,11 @@ def snapshot(form: SnapshotForm):
 @app.post('/modelReload')
 def model_reload(form: ModelReloadForm):
     token = form.token
-    name = form.name
+    global model_file_name
+    model_file_name = form.model_file_name
     if token != 'Super@dmin':
         return
-    new_model = keras.models.load_model(name + '.h5')
+    new_model = keras.models.load_model(model_file_name)
     global model
     model = new_model
 
