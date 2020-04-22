@@ -14,7 +14,7 @@ model = create_model_text_cnn_separable(config.feature1_number, config.feature2_
 
 # 加载数据
 epoch = 10
-batch_size = 64
+batch_size = 32
 num_data = data_loader.num_data
 num_batch = num_data // batch_size * epoch
 for batch_index in range(num_batch):
