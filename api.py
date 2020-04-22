@@ -23,8 +23,8 @@ train_status = {
 
 # 加载模型
 print('model loading...')
-model_file_name = 'text_cnn'
-model = keras.models.load_model(model_file_name + '.h5')
+model_file_name = 'text_cnn_separable.2.88.h5'
+model = keras.models.load_model(model_file_name)
 
 # 加载数据
 print('vector loading...')
@@ -36,7 +36,8 @@ app = FastAPI()
 # 跨域配置
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=['http://localhost:8080'],
+    # allow_origins=['http://localhost:8080'],
+    allow_origins=['*'],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
