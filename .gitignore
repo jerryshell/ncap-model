@@ -1,6 +1,9 @@
 .idea
 __pycache__
-data
+data/*.csv
 save
 sgns.wiki.bigram-char
 *.h5
+
+# macOS
+.DS_Store
