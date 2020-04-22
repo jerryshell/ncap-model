@@ -31,4 +31,4 @@ for batch_index in range(num_batch):
     model.evaluate(X, y)
 
 # 保存
-model.save('text_cnn_separable.h5')
+model.save('text_cnn_separable.2.h5')
