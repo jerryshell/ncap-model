@@ -226,9 +226,17 @@ def model_reload(form: ModelReloadForm):
     global model_file_name
     model_file_name = form.model_file_name
 
-    global model
-    model = keras.models.load_model(model_file_name)
-    model.summary()
+    try:
+        new_model = keras.models.load_model(model_file_name)
+        global model
+        model = new_model
+        model.summary()
+    except Exception as e:
+        print(e)
+        return {
+            'ok': False,
+            'message': 'keras.models.load_model(model_file_name) fail'
+        }
 
     return {
         'ok': True
