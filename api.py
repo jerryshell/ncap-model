@@ -25,7 +25,7 @@ train_status = {
 print('model loading...')
 model_file_name = 'text_cnn_separable.2.88.h5'
 model = keras.models.load_model(model_file_name)
-print(model.summary())
+model.summary()
 
 # 加载数据
 print('vector loading...')
@@ -86,6 +86,8 @@ def index():
 # uniapp 接口
 @app.post('/')
 def main(form: UniappForm):
+    print(form)
+
     # 解析请求参数
     sentence_list = form.sentence.split('\n')
     token = form.token
@@ -146,40 +148,47 @@ def main(form: UniappForm):
 # 管理接口
 @app.post('/zero')
 def admin(form: AdminForm):
+    print(form)
+
     global train_status
     # 解析请求参数
     token = form.token
     key = form.key
     value = form.value
-    print(form)
 
     if token != 'Super@dmin':
         return {'fuck': 'yourself'}
 
     if key == 'set trainStatus.realTimeTuning':
         train_status['real_time_tuning'] = (value == 'open')
-        return
+        return {
+            'ok': True
+        }
 
     if key == 'set trainStatus.color':
         train_status['color'] = value
-        return
+        return {
+            'ok': True
+        }
 
     if key == 'set trainStatus.message':
         train_status['message'] = value
-        return
+        return {
+            'ok': True
+        }
 
     if key == 'set notice':
         global notice
         notice = value
-        return
+        return {
+            'ok': True
+        }
 
 
 # 服务器信息接口
 @app.get('/info')
 def info():
-    model_summary = model.summary()
-    print('model_summary')
-    print(model_summary)
+    model.summary()
     return {
         'notice': notice,
         'trainStatus': train_status,
@@ -190,33 +199,39 @@ def info():
 # 快照接口
 @app.post('/snapshot')
 def snapshot(form: SnapshotForm):
-    token = form.token
-    if token != 'Super@dmin':
-        return
+    print(form)
+
+    if form.token != 'Super@dmin':
+        return {
+            'ok': False
+        }
+
     time_str = time.strftime("%Y-%m-%d.%H.%M.%S", time.localtime())
-    model.save(model_file_name + '.' + time_str + '.h5')
+    model.save(time_str + '.' + model_file_name)
+    return {
+        'ok': True
+    }
 
 
 # 重载模型接口
 @app.post('/modelReload')
 def model_reload(form: ModelReloadForm):
-    token = form.token
+    print(form)
+
+    if form.token != 'Super@dmin':
+        return {
+            'ok': False
+        }
 
     global model_file_name
     model_file_name = form.model_file_name
-    print('model_reload() %s' % model_file_name)
 
-    if token != 'Super@dmin':
-        return
-
-    print("======")
     global model
-    print(model.summary())
     model = keras.models.load_model(model_file_name)
-    print(model.summary())
-    print("======")
+    model.summary()
+
     return {
-        'modelSummary': model.summary()
+        'ok': True
     }
 
 
