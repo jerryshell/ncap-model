@@ -209,9 +209,12 @@ def model_reload(form: ModelReloadForm):
     if token != 'Super@dmin':
         return
 
+    print("======")
     global model
+    print(model.summary())
     model = keras.models.load_model(model_file_name)
     print(model.summary())
+    print("======")
     return {
         'modelSummary': model.summary()
     }
