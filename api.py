@@ -25,6 +25,7 @@ train_status = {
 print('model loading...')
 model_file_name = 'text_cnn_separable.2.88.h5'
 model = keras.models.load_model(model_file_name)
+print(model.summary())
 
 # 加载数据
 print('vector loading...')
@@ -197,13 +198,20 @@ def snapshot(form: SnapshotForm):
 @app.post('/modelReload')
 def model_reload(form: ModelReloadForm):
     token = form.token
+
     global model_file_name
     model_file_name = form.model_file_name
+    print('model_reload() %s' % model_file_name)
+
     if token != 'Super@dmin':
         return
-    new_model = keras.models.load_model(model_file_name)
+
     global model
-    model = new_model
+    model = keras.models.load_model(model_file_name)
+    print(model.summary())
+    return {
+        'modelSummary': model.summary()
+    }
 
 
 # 使用 uvicorn 运行 fastapi
