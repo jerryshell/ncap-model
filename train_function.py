@@ -3,16 +3,17 @@ from data_helper import DataHelper
 from data_loader import DataLoader
 from models import create_model_text_cnn_separable
 
-# 数据加载工具
+# 模型
+model = create_model_text_cnn_separable(config.feature1_number, config.feature2_number)
+model.summary()
+
+# 加载数据
 print('data loading...')
 data_loader = DataLoader()
 print('vector loading...')
 data_helper = DataHelper(config.feature1_number, config.feature2_number)
 
-# 模型
-model = create_model_text_cnn_separable(config.feature1_number, config.feature2_number)
-
-# 加载数据
+# 训练
 epoch = 10
 batch_size = 32
 num_data = data_loader.num_data

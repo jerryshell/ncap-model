@@ -4,17 +4,17 @@ import config
 from data_helper import DataHelper
 from data_loader import DataLoader
 
+# 模型
+print('model loading...')
+model_file_name = config.retrain_model_file_name
+model = keras.models.load_model(model_file_name)
+model.summary()
+
 # 数据加载工具
 print('data loading...')
 data_loader = DataLoader()
 print('vector loading...')
 data_helper = DataHelper(config.feature1_number, config.feature2_number)
-
-# 模型
-print('model loading...')
-model_file_name = 'retrain.text_cnn_separable.2.80.h5'
-model = keras.models.load_model(model_file_name)
-model.summary()
 
 # 加载数据
 epoch = 5
