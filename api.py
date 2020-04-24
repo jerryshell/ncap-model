@@ -23,7 +23,7 @@ train_status = {
 
 # 加载模型
 print('model loading...')
-model_file_name = 'text_cnn_separable.2.88.h5'
+model_file_name = 'text_cnn_separable.2.80.h5'
 model = keras.models.load_model(model_file_name)
 model.summary()
 
