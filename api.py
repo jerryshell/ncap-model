@@ -177,6 +177,9 @@ def admin(form: AdminForm):
 # 服务器信息接口
 @app.get('/info')
 def info():
+    model_summary = model.summary()
+    print('model_summary')
+    print(model_summary)
     return {
         'notice': notice,
         'trainStatus': train_status,
