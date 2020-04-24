@@ -32,3 +32,4 @@ for batch_index in range(num_batch):
 
 # 保存
 model.save('text_cnn_separable.2.h5')
+print('model saved')
