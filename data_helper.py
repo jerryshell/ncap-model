@@ -68,6 +68,7 @@ class DataHelper:
             batch_vector[batch_index] = vector
         return batch_vector, batch_label
 
+    # 生成器
     def generator(self, data_loader: DataLoader, batch_size):
         while True:
             yield self.get_batch_label_and_vector(data_loader, batch_size)
