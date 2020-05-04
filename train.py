@@ -28,7 +28,6 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
         x=data_helper.generator(data_loader, batch_size),
         steps_per_epoch=data_loader.num_data // batch_size,
         epochs=epochs,
-        validation_split=0.1,
         callbacks=[tensorboard_callback],
         use_multiprocessing=True,
     )
