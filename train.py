@@ -34,9 +34,10 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
     )
 
     # 测试
-    model.evaluate_generator(
-        generator=data_helper.generator(data_loader, batch_size),
+    model.evaluate(
+        x=data_helper.generator(data_loader, batch_size),
         steps=data_loader.num_data // batch_size,
+        use_multiprocessing=True,
     )
 
     # 保存
@@ -47,4 +48,4 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
 if __name__ == '__main__':
     # 重新训练一个新模型
     model = create_model_text_cnn_separable(config.feature1_number, config.feature2_number)
-    train(model, config.train_model_filename)
+    train(model=model, save_filename=config.train_model_filename, batch_size=32, epochs=1)
