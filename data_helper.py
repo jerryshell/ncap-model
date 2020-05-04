@@ -66,7 +66,11 @@ class DataHelper:
             # 填充返回结果
             batch_label[batch_index] = label
             batch_vector[batch_index] = vector
-        return batch_label, batch_vector
+        return batch_vector, batch_label
+
+    def generator(self, data_loader: DataLoader, batch_size):
+        while True:
+            yield self.get_batch_label_and_vector(data_loader, batch_size)
 
     # 将一句话转成向量
     def sentence2vector(self, sentence):
