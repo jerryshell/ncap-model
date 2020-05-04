@@ -29,14 +29,12 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
         steps_per_epoch=data_loader.num_data // batch_size,
         epochs=epochs,
         callbacks=[tensorboard_callback],
-        use_multiprocessing=True,
     )
 
     # 测试
     model.evaluate(
         x=data_helper.generator(data_loader, batch_size),
         steps=data_loader.num_data // batch_size,
-        use_multiprocessing=True,
     )
 
     # 保存
