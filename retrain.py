@@ -10,32 +10,25 @@ model_file_name = config.retrain_model_file_name
 model = keras.models.load_model(model_file_name)
 model.summary()
 
-# 数据加载工具
+# 加载数据
 print('data loading...')
 data_loader = DataLoader()
 print('vector loading...')
 data_helper = DataHelper(config.feature1_number, config.feature2_number)
 
-# 加载数据
-epoch = 5
+# 训练
 batch_size = 32
-num_data = data_loader.num_data
-num_batch = num_data // batch_size * epoch
-for batch_index in range(num_batch):
-    print('%s / %s' % (batch_index, num_batch))
-    y, X = data_helper.get_batch_label_and_vector(data_loader, batch_size)
-    model.fit(X, y, batch_size=batch_size)
-    if batch_index % 10 == 0:
-        model.save(model_file_name)
-        print('model saved')
+model.fit_generator(
+    generator=data_helper.generator(data_loader, batch_size),
+    steps_per_epoch=data_loader.num_data // batch_size,
+    epochs=10
+)
 
 # 测试
-num_data = int(data_loader.num_data / 10)
-num_batch = num_data // batch_size
-for batch_index in range(num_batch):
-    print('%s / %s' % (batch_index, num_batch))
-    y, X = data_helper.get_batch_label_and_vector(data_loader, batch_size)
-    model.evaluate(X, y)
+model.evaluate_generator(
+    generator=data_helper.generator(data_loader, batch_size),
+    steps=data_loader.num_data // batch_size,
+)
 
 # 保存
 model.save(model_file_name)

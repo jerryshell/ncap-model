@@ -28,5 +28,5 @@ model.evaluate_generator(
 )
 
 # 保存
-model.save('text_cnn_separable.2.h5')
+model.save(config.train_model_file_name)
 print('model saved')
