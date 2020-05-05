@@ -73,7 +73,7 @@ class ModelReloadForm(BaseModel):
 
 # 加载 token 列表
 def load_token_list():
-    with open('./token_list', 'r') as f:
+    with open('api_token_list', 'r') as f:
         return [token.strip() for token in f.readlines()]
 
 
