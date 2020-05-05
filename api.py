@@ -8,7 +8,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-import config
+import model_config
 from data_helper import DataHelper
 
 # 网站公告
@@ -29,7 +29,7 @@ model.summary()
 
 # 加载数据
 print('vector loading...')
-data_helper = DataHelper(config.feature1_number, config.feature2_number)
+data_helper = DataHelper(model_config.feature1_count, model_config.feature2_count)
 
 # 实例化 FastAPI
 app = FastAPI()

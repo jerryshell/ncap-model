@@ -3,7 +3,7 @@ import datetime
 import tensorflow as tf
 from tensorflow import keras
 
-import config
+import model_config
 from data_helper import DataHelper
 from data_loader import DataLoader
 
@@ -16,7 +16,7 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
     print('data loading...')
     data_loader = DataLoader()
     print('vector loading...')
-    data_helper = DataHelper(config.feature1_number, config.feature2_number)
+    data_helper = DataHelper(model_config.feature1_count, model_config.feature2_count)
 
     # 配置 tensorboard，将训练过程可视化，方便调参
     log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
@@ -46,11 +46,11 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
 
 if __name__ == '__main__':
     import sys
-    from models import create_model_text_cnn_separable
+    from model_creator import create_model_text_cnn_separable
 
     print(sys.argv)
     if len(sys.argv) != 3:
-        print('python3 train.py [batch_size] [epochs]')
+        print('python3 model_train.py [batch_size] [epochs]')
         exit(0)
 
     batch_size = int(sys.argv[1])
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     print('batch_size %s epochs %s' % (batch_size, epochs))
 
     # 重新训练一个新模型
-    model = create_model_text_cnn_separable(config.feature1_number, config.feature2_number)
+    model = create_model_text_cnn_separable(model_config.feature1_count, model_config.feature2_count)
     train(
         model=model,
         save_filename='text_cnn_separable.2.h5',
