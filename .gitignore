@@ -1,8 +1,6 @@
 .idea
 __pycache__
-data/*.csv
-save
-sgns.wiki.bigram-char
+data/*
 *.h5
 
 # macOS

@@ -11,7 +11,7 @@ class DataHelper:
     def __init__(self, feature1_number, feature2_number):
         self.feature1_number = feature1_number
         self.feature2_number = feature2_number
-        self.gensim_model = KeyedVectors.load_word2vec_format('sgns.wiki.bigram-char')
+        self.gensim_model = KeyedVectors.load_word2vec_format('./data/sgns.wiki.bigram-char')
 
     # 把一个单独的词语转换成向量，如果不存在则返回 0
     def word2vec(self, word):
