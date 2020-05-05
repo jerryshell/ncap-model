@@ -8,10 +8,10 @@ from data_loader import DataLoader
 
 argv = sys.argv
 if len(argv) != 3:
-    print('python3 model_evaluate.py [model_file_name] [batch_size]')
+    print('python3 model_evaluate.py [model_filename] [batch_size]')
     exit(0)
 
-model_file_name = argv[1]
+model_filename = argv[1]
 batch_size = int(argv[2])
 
 # 数据加载工具
@@ -22,7 +22,7 @@ data_helper = DataHelper(model_config.feature1_count, model_config.feature2_coun
 
 # 模型
 print('model loading...')
-model = keras.models.load_model(model_file_name)
+model = keras.models.load_model(model_filename)
 model.summary()
 
 model.evaluate(

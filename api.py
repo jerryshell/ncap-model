@@ -1,4 +1,5 @@
 import os
+import sys
 import time
 
 import numpy as np
@@ -10,6 +11,12 @@ from pydantic import BaseModel, Field
 
 import model_config
 from data_helper import DataHelper
+
+if len(sys.argv) != 2:
+    print('python3 api.py [model_filename]')
+    exit(0)
+
+print(sys.argv)
 
 # 网站公告
 notice = ''
@@ -23,8 +30,8 @@ train_status = {
 
 # 加载模型
 print('model loading...')
-model_file_name = 'text_cnn_separable.2.80.h5'
-model = keras.models.load_model(model_file_name)
+model_filename = sys.argv[1]
+model = keras.models.load_model(model_filename)
 model.summary()
 
 # 加载数据
@@ -68,7 +75,7 @@ class SnapshotForm(BaseModel):
 # model reload form
 class ModelReloadForm(BaseModel):
     token: str
-    model_file_name: str
+    model_filename: str
 
 
 # 加载 token 列表
@@ -192,7 +199,7 @@ def info():
     return {
         'notice': notice,
         'trainStatus': train_status,
-        'model_file_name': model_file_name
+        'model_filename': model_filename
     }
 
 
@@ -207,7 +214,7 @@ def snapshot(form: SnapshotForm):
         }
 
     time_str = time.strftime("%Y-%m-%d.%H.%M.%S", time.localtime())
-    model.save(time_str + '.' + model_file_name)
+    model.save(time_str + '.' + model_filename)
     return {
         'ok': True
     }
@@ -223,11 +230,11 @@ def model_reload(form: ModelReloadForm):
             'ok': False
         }
 
-    global model_file_name
-    model_file_name = form.model_file_name
+    global model_filename
+    model_filename = form.model_filename
 
     try:
-        new_model = keras.models.load_model(model_file_name)
+        new_model = keras.models.load_model(model_filename)
         global model
         model = new_model
         model.summary()
@@ -235,7 +242,7 @@ def model_reload(form: ModelReloadForm):
         print(e)
         return {
             'ok': False,
-            'message': 'keras.models.load_model(model_file_name) fail'
+            'message': 'keras.models.load_model(model_filename) fail'
         }
 
     return {
