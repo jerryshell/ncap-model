@@ -5,13 +5,24 @@
 
 ## 依赖
 
+### 升级 pip 并设置镜像
+
 ```bash
 pip3 install --upgrade pip -i https://pypi.douban.com/simple
 pip3 config set global.index-url https://pypi.douban.com/simple
+```
+
+### 安装依赖
+
+```bash
 pip3 install --upgrade tensorflow keras pandas numpy jieba gensim fastapi uvicorn
 ```
 
 ## Docker
+
+```bash
+mkdir -p /docker-data/tf/notebooks
+```
 
 ```bash
 docker run -d \
