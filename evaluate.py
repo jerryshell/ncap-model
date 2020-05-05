@@ -1,11 +1,18 @@
+import sys
+
 import tensorflow.keras as keras
 
 import config
 from data_helper import DataHelper
 from data_loader import DataLoader
 
-model_file_name = 'text_cnn_separable.2.h5'
-batch_size = 32
+argv = sys.argv
+if len(argv) != 3:
+    print('python3 retrain.py [model_file_name] [batch_size]')
+    exit(0)
+
+model_file_name = argv[1]
+batch_size = int(argv[2])
 
 # 数据加载工具
 print('data loading...')
