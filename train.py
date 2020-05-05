@@ -31,7 +31,7 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
             tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1),
             # 定时保存模型
             tf.keras.callbacks.ModelCheckpoint(
-                save_filename, monitor='val_loss', verbose=0, save_best_only=True,
+                save_filename, monitor='val_accuracy', verbose=0, save_best_only=True,
                 save_weights_only=False, mode='auto', save_freq='epoch'
             )
         ],
