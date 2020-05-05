@@ -1,11 +1,18 @@
+import sys
+
 import tensorflow.keras as keras
 
 from train import train
 
-model_file_name = 'retrain.text_cnn_separable.2.80.h5'
+argv = sys.argv
+if len(argv) != 4:
+    print('python3 retrain.py [model_file_name] [batch_size] [epochs]')
+    exit(0)
 
-print('model loading...')
+model_file_name = argv[1]
+batch_size = int(argv[2])
+epochs = int(argv[3])
+
 model = keras.models.load_model(model_file_name)
 
-train(model=model, save_filename=model_file_name, batch_size=32, epochs=10)
-model.summary()
+train(model=model, save_filename=model_file_name, batch_size=batch_size, epochs=epochs)
