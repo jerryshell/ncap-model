@@ -6,7 +6,6 @@ from tensorflow import keras
 import config
 from data_helper import DataHelper
 from data_loader import DataLoader
-from models import create_model_text_cnn_separable
 
 
 def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
@@ -43,6 +42,23 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
 
 
 if __name__ == '__main__':
+    import sys
+    from models import create_model_text_cnn_separable
+
+    print(sys.argv)
+    if len(sys.argv) != 3:
+        print('python3 train.py [batch_size] [epochs]')
+        exit(0)
+
+    batch_size = int(sys.argv[1])
+    epochs = int(sys.argv[2])
+    print('batch_size %s epochs %s' % (batch_size, epochs))
+
     # 重新训练一个新模型
     model = create_model_text_cnn_separable(config.feature1_number, config.feature2_number)
-    train(model=model, save_filename=config.train_model_filename, batch_size=32, epochs=1)
+    train(
+        model=model,
+        save_filename=config.train_model_filename,
+        batch_size=batch_size,
+        epochs=epochs
+    )
