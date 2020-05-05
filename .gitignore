@@ -1,6 +1,7 @@
 .idea
 __pycache__
-data/*
+data/
+logs/
 *.h5
 
 # macOS
