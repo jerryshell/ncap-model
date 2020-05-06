@@ -23,9 +23,12 @@ notice = ''
 
 # 训练状态
 train_status = {
-    'real_time_tuning': True,  # 实时调教
-    'color': 'green',  # 公告字体颜色
-    'message': '调教参数实时更新',  # 公告信息
+    # 实时调参
+    'real_time_tuning': True,
+    # 公告字体颜色
+    'color': 'green',
+    # 公告信息
+    'message': '实时调参开启',
 }
 
 # 加载模型
@@ -106,7 +109,7 @@ def main(form: UniappForm):
     if token not in token_list:
         return {'ok': False, 'message': '请输入正确的 Token'}
 
-    # 多行使用时强制停用调教模式
+    # 多行使用时强制停用调参模式
     sentence_list_len = len(sentence_list)
     if sentence_list_len > 1:
         train_flag = False
@@ -117,12 +120,12 @@ def main(form: UniappForm):
 
     # 迭代 sentence_list 使用模型得到概率
     for sentence in sentence_list:
-        # 调教模式保存数据
+        # 调参模式保存数据
         time_str = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         if train_flag:
             extra_data = '%s,%s,%s,%s' % (train_label, sentence, time_str, token)
             os.system('echo "%s" >> extra_data' % extra_data)
-            # 实时调教
+            # 实时调参
             if train_status['real_time_tuning']:
                 train_label_np = np.zeros(shape=(1, 1))
                 train_label_np.put(0, train_label)
@@ -164,7 +167,7 @@ def admin(form: AdminForm):
     value = form.value
 
     if token != 'Super@dmin':
-        return {'fuck': 'yourself'}
+        return {'ok': False}
 
     if key == 'set trainStatus.realTimeTuning':
         train_status['real_time_tuning'] = (value == 'open')
@@ -197,8 +200,9 @@ def admin(form: AdminForm):
 def info():
     model.summary()
     return {
+        'ok': True,
         'notice': notice,
-        'trainStatus': train_status,
+        'train_status': train_status,
         'model_filename': model_filename
     }
 
