@@ -25,13 +25,14 @@ mkdir -p /docker-data/tf/notebooks
 ```
 
 ```bash
-docker run -d \
-  --rm \
-  --name tf \
-  -p 8888:8888 \
-  -p 8000:8000 \
-  -v /docker-data/tf/notebooks:/tf/notebooks \
-  tensorflow/tensorflow:latest-py3-jupyter
+docker run -it --rm \
+  -v $PWD:/tmp \
+  -w /tmp \
+  tensorflow/tensorflow:latest-py3-jupyter \
+  pip3 install --upgrade pip -i https://pypi.douban.com/simple && \
+  pip3 config set global.index-url https://pypi.douban.com/simple && \
+  pip3 install tensorflow keras pandas numpy jieba gensim fastapi uvicorn && \
+  python3 model_train.py 64 100 1>log 2>&1
 ```
 
 ## 参考
