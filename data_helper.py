@@ -77,7 +77,7 @@ class DataHelper:
         # 根据 batch_size 填充返回结果
         for batch_index in range(batch_size):
             # 从 data_generator 中读取下一个数据
-            sentence, label = next(data_generator)
+            label, sentence = next(data_generator)
             # 分词，获得词语列表
             word_list = sentence.split(' ')
             # 把词语列表转换成向量
