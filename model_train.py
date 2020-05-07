@@ -29,6 +29,7 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
         validation_data=validation_data_generator,
         validation_steps=data_helper.validation_data_count // batch_size,
         epochs=epochs,
+        shuffle=True,
         callbacks=[
             # 配置 tensorboard，将训练过程可视化，方便调参，tensorboard --logdir logs/fit
             tf.keras.callbacks.TensorBoard(

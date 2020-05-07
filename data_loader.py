@@ -1,3 +1,5 @@
+import itertools
+
 import numpy as np
 import pandas as pd
 
@@ -31,61 +33,13 @@ class DataLoader:
         print('test_data.shape', self.test_data.shape)
 
     def train_data_generator(self):
-        # 初始化迭代索引
-        next_index = 0
-        while True:
-            item = self.train_data[next_index]
-
-            # 0 为正面情感，其他为负面情感转为 1
-            y = 0 if item[0] == 0 else 1
-            x = item[1]
-            yield x, y
-
-            # next_index 自增
-            next_index += 1
-
-            # 使用完一轮之后再次打乱数据，并重置 next_index
-            if next_index == self.train_data_count:
-                np.random.shuffle(self.train_data)
-                next_index = 0
+        return itertools.cycle(self.train_data)
 
     def validation_data_generator(self):
-        # 初始化迭代索引
-        next_index = 0
-        while True:
-            item = self.validation_data[next_index]
-
-            # 0 为正面情感，其他为负面情感转为 1
-            y = 0 if item[0] == 0 else 1
-            x = item[1]
-            yield x, y
-
-            # next_index 自增
-            next_index += 1
-
-            # 使用完一轮之后再次打乱数据，并重置 next_index
-            if next_index == self.validation_data_count:
-                np.random.shuffle(self.validation_data)
-                next_index = 0
+        return itertools.cycle(self.validation_data)
 
     def test_data_generator(self):
-        # 初始化迭代索引
-        next_index = 0
-        while True:
-            item = self.test_data[next_index]
-
-            # 0 为正面情感，其他为负面情感转为 1
-            y = 0 if item[0] == 0 else 1
-            x = item[1]
-            yield x, y
-
-            # next_index 自增
-            next_index += 1
-
-            # 使用完一轮之后再次打乱数据，并重置 next_index
-            if next_index == self.test_data_count:
-                np.random.shuffle(self.test_data)
-                next_index = 0
+        return itertools.cycle(self.test_data)
 
 
 if __name__ == '__main__':
