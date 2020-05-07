@@ -61,7 +61,7 @@ if __name__ == '__main__':
     model = create_model(model_config.feature1_count, model_config.feature2_count)
     train(
         model=model,
-        save_filename='text_cnn_separable.2.h5',
+        save_filename='text_cnn.2.h5',
         batch_size=batch_size,
         epochs=epochs
     )
