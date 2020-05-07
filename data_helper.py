@@ -78,6 +78,8 @@ class DataHelper:
         for batch_index in range(batch_size):
             # 从 data_generator 中读取下一个数据
             label, sentence = next(data_generator)
+            # 0 为正面情感，其他为负面情感转为 1
+            label = 0 if label == 0 else 1
             # 分词，获得词语列表
             word_list = sentence.split(' ')
             # 把词语列表转换成向量
