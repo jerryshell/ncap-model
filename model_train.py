@@ -46,7 +46,7 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
 
 if __name__ == '__main__':
     import sys
-    from model_creator import create_model_text_cnn_separable
+    from model_creator import create_model
 
     print(sys.argv)
     if len(sys.argv) != 3:
@@ -58,7 +58,7 @@ if __name__ == '__main__':
     print('batch_size %s epochs %s' % (batch_size, epochs))
 
     # 重新训练一个新模型
-    model = create_model_text_cnn_separable(model_config.feature1_count, model_config.feature2_count)
+    model = create_model(model_config.feature1_count, model_config.feature2_count)
     train(
         model=model,
         save_filename='text_cnn_separable.2.h5',
