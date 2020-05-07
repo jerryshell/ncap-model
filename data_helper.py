@@ -32,11 +32,11 @@ class DataHelper:
         # 测试数据大小
         self.test_data_count = data_loader.test_data_count
 
-    # 把一个单独的词语转换成向量，如果不存在则返回 0
+    # 把一个单独的词语转换成向量，如果不存在则随机返回，随机区间为 [-1, 1)
     def word2vec(self, word):
         if word in self.gensim_model:
             return self.gensim_model.get_vector(word)
-        return np.zeros(shape=(self.feature2_number,), dtype=np.float32)
+        return np.random.uniform(-1, 1, (self.feature2_number,))
 
     # 把词语列表转换成向量，版本 2，从最后一个词开始填充 vector
     def word_list2vector_tail(self, word_list):

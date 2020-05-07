@@ -39,7 +39,7 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
             # 定时保存模型
             tf.keras.callbacks.ModelCheckpoint(
                 filepath=save_filename,
-                monitor='val_accuracy',
+                monitor='val_loss',
                 verbose=0,
                 save_best_only=True,
                 save_weights_only=False,

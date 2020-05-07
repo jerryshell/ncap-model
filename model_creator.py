@@ -4,11 +4,15 @@ import tensorflow.keras as keras
 def create_model(feature1_number, feature2_number):
     inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
 
+    filters = 128
+    kernel_sizes = [3, 4, 5]
+    padding = 'valid'
+
     cnn1 = keras.layers.SeparableConv1D(
-        filters=256,
-        kernel_size=3,
+        filters=filters,
+        kernel_size=kernel_sizes[0],
         strides=1,
-        padding='same',
+        padding=padding,
         activation='relu',
     )(inputs)
     cnn1 = keras.layers.MaxPooling1D(
@@ -16,10 +20,10 @@ def create_model(feature1_number, feature2_number):
     )(cnn1)
 
     cnn2 = keras.layers.SeparableConv1D(
-        filters=256,
-        kernel_size=4,
+        filters=filters,
+        kernel_size=kernel_sizes[1],
         strides=1,
-        padding='same',
+        padding=padding,
         activation='relu',
     )(inputs)
     cnn2 = keras.layers.MaxPooling1D(
@@ -27,10 +31,10 @@ def create_model(feature1_number, feature2_number):
     )(cnn2)
 
     cnn3 = keras.layers.SeparableConv1D(
-        filters=256,
-        kernel_size=5,
+        filters=filters,
+        kernel_size=kernel_sizes[2],
         strides=1,
-        padding='same',
+        padding=padding,
         activation='relu'
     )(inputs)
     cnn3 = keras.layers.MaxPooling1D(
