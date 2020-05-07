@@ -11,7 +11,26 @@ class DataHelper:
     def __init__(self, feature1_number, feature2_number):
         self.feature1_number = feature1_number
         self.feature2_number = feature2_number
+
+        # 加载字典
         self.gensim_model = KeyedVectors.load_word2vec_format('./data/sgns.wiki.bigram-char')
+
+        # 加载原始数据
+        data_loader = DataLoader()
+
+        # 原始训练数据生成器
+        self.raw_train_data_generator = data_loader.train_data_generator()
+        # 原始验证数据生成器
+        self.raw_validation_data_generator = data_loader.validation_data_generator()
+        # 原始测试数据生成器
+        self.raw_test_data_generator = data_loader.test_data_generator()
+
+        # 训练数据大小
+        self.train_data_count = data_loader.train_data_count
+        # 验证数据大小
+        self.validation_data_count = data_loader.validation_data_count
+        # 测试数据大小
+        self.test_data_count = data_loader.test_data_count
 
     # 把一个单独的词语转换成向量，如果不存在则返回 0
     def word2vec(self, word):
@@ -50,15 +69,15 @@ class DataHelper:
                 break
         return vector
 
-    # data_loader 中读取 batch_size 个数据，并转换成向量返回
-    def get_batch_label_and_vector(self, data_loader: DataLoader, batch_size):
+    # data_generator 中读取 batch_size 个数据，并转换成向量返回
+    def get_batch_vector_and_label(self, data_generator: iter, batch_size):
         # 初始化返回结果
         batch_label = np.zeros(shape=(batch_size,))
         batch_vector = np.zeros(shape=(batch_size, self.feature1_number, self.feature2_number))
         # 根据 batch_size 填充返回结果
         for batch_index in range(batch_size):
-            # 从 data_loader 中读取下一个数据
-            label, sentence = data_loader.next()
+            # 从 data_generator 中读取下一个数据
+            sentence, label = next(data_generator)
             # 分词，获得词语列表
             word_list = sentence.split(' ')
             # 把词语列表转换成向量
@@ -68,10 +87,20 @@ class DataHelper:
             batch_vector[batch_index] = vector
         return batch_vector, batch_label
 
-    # 生成器
-    def generator(self, data_loader: DataLoader, batch_size):
+    # 训练数据生成器
+    def train_data_generator(self, batch_size):
         while True:
-            yield self.get_batch_label_and_vector(data_loader, batch_size)
+            yield self.get_batch_vector_and_label(self.raw_train_data_generator, batch_size)
+
+    # 验证数据生成器
+    def validation_data_generator(self, batch_size):
+        while True:
+            yield self.get_batch_vector_and_label(self.raw_validation_data_generator, batch_size)
+
+    # 测试数据生成器
+    def test_data_generator(self, batch_size):
+        while True:
+            yield self.get_batch_vector_and_label(self.raw_test_data_generator, batch_size)
 
     # 将一句话转成向量
     def sentence2vector(self, sentence):
@@ -90,13 +119,3 @@ class DataHelper:
         test_data = np.zeros(shape=(1, self.feature1_number, self.feature2_number))
         test_data[0] = self.sentence2vector(sentence)
         return test_data
-
-
-if __name__ == '__main__':
-    import sys
-    import model_config
-
-    data_loader = DataLoader()
-    data_helper = DataHelper(model_config.feature1_count, model_config.feature2_count)
-    np.set_printoptions(threshold=sys.maxsize)  # 强制打印 numpy 的整个数组
-    print(data_helper.get_batch_label_and_vector(data_loader, 100))

@@ -5,7 +5,6 @@ from tensorflow import keras
 
 import model_config
 from data_helper import DataHelper
-from data_loader import DataLoader
 
 
 def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
@@ -14,33 +13,45 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
 
     # 加载数据
     print('data loading...')
-    data_loader = DataLoader()
-    print('vector loading...')
     data_helper = DataHelper(model_config.feature1_count, model_config.feature2_count)
 
-    # 配置 tensorboard，将训练过程可视化，方便调参
-    log_dir = "logs/fit/" + datetime.datetime.now().strftime("%Y%m%d-%H%M%S")
+    # 训练数据生成器
+    train_data_generator = data_helper.train_data_generator(batch_size)
+    # 验证数据生成器
+    validation_data_generator = data_helper.validation_data_generator(batch_size)
+    # 测试数据生成器
+    test_data_generator = data_helper.test_data_generator(batch_size)
 
     # 训练
     model.fit(
-        x=data_helper.generator(data_loader, batch_size),
-        steps_per_epoch=data_loader.num_data // batch_size,
+        x=train_data_generator,
+        steps_per_epoch=data_helper.train_data_count // batch_size,
+        validation_data=validation_data_generator,
+        validation_steps=data_helper.validation_data_count // batch_size,
         epochs=epochs,
         callbacks=[
-            # tensorboard --logdir logs/fit
-            tf.keras.callbacks.TensorBoard(log_dir=log_dir, histogram_freq=1),
+            # 配置 tensorboard，将训练过程可视化，方便调参，tensorboard --logdir logs/fit
+            tf.keras.callbacks.TensorBoard(
+                log_dir='logs/fit/' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S'),
+                histogram_freq=1
+            ),
             # 定时保存模型
             tf.keras.callbacks.ModelCheckpoint(
-                save_filename, monitor='accuracy', verbose=0, save_best_only=True,
-                save_weights_only=False, mode='auto', save_freq='epoch'
+                filepath=save_filename,
+                monitor='val_accuracy',
+                verbose=0,
+                save_best_only=True,
+                save_weights_only=False,
+                mode='auto',
+                save_freq='epoch'
             )
         ],
     )
 
     # 测试
     model.evaluate(
-        x=data_helper.generator(data_loader, batch_size),
-        steps=data_loader.num_data // batch_size,
+        x=test_data_generator,
+        steps=data_helper.test_data_count // batch_size,
     )
 
 

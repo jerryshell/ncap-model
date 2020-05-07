@@ -4,7 +4,6 @@ import tensorflow.keras as keras
 
 import model_config
 from data_helper import DataHelper
-from data_loader import DataLoader
 
 argv = sys.argv
 if len(argv) != 3:
@@ -14,18 +13,20 @@ if len(argv) != 3:
 model_filename = argv[1]
 batch_size = int(argv[2])
 
-# 数据加载工具
-print('data loading...')
-data_loader = DataLoader()
-print('vector loading...')
-data_helper = DataHelper(model_config.feature1_count, model_config.feature2_count)
-
 # 模型
 print('model loading...')
 model = keras.models.load_model(model_filename)
 model.summary()
 
+# 加载数据
+print('data loading...')
+data_helper = DataHelper(model_config.feature1_count, model_config.feature2_count)
+
+# 数据生成器
+test_data_generator = data_helper.test_data_generator(batch_size)
+
+# 测试
 model.evaluate(
-    x=data_helper.generator(data_loader, batch_size),
-    steps=data_loader.num_data // batch_size,
+    x=test_data_generator,
+    steps=data_helper.test_data_count // batch_size,
 )
