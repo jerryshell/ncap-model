@@ -7,7 +7,7 @@ from data_loader import DataLoader
 class DataHelper:
     def __init__(self):
         # 加载字典
-        self.word2vec = {}
+        word2vec = {}
         self.word2idx = {}
         max_idx = 1
         with open('./data/sgns.wiki.bigram-char') as f:
@@ -18,13 +18,13 @@ class DataHelper:
                     continue
                 word = values[0]
                 vec = np.asarray(values[1:], dtype='float32')
-                self.word2vec[word] = vec
+                word2vec[word] = vec
                 self.word2idx[word] = max_idx
                 max_idx += 1
 
         self.idx2vec = np.zeros(shape=(max_idx, model_config.feature2_count))
         for word, idx in self.word2idx.items():
-            vec = self.word2vec.get(word)
+            vec = word2vec.get(word)
             self.idx2vec[idx] = vec
 
         # 加载原始数据
