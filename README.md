@@ -20,15 +20,28 @@ pip3 install --upgrade tensorflow keras pandas numpy jieba gensim fastapi uvicor
 
 ## Docker
 
+### train
+
 ```bash
 docker run -d --rm --name tf \
-  -v $PWD:/tmp \
-  -w /tmp \
+  -v $PWD:/data \
+  -w /data \
   tensorflow/tensorflow:latest \
   bash -c ' pip3 install -U pip -i https://pypi.douban.com/simple && \
   pip3 config set global.index-url https://pypi.douban.com/simple && \
   pip3 install -U tensorflow keras pandas numpy jieba gensim fastapi uvicorn && \
   python3 model_train.py 64 100 false 1>log 2>&1 '
+```
+
+### tensorboard
+
+```bash
+docker run -d --rm --name tf-board \
+  -p 6006:6006 \
+  -v $PWD:/data \
+  -w /data \
+  tensorflow/tensorflow:latest \
+  tensorboard --logdir logs/fit --host 0.0.0.0 --port 6006
 ```
 
 ## 参考
