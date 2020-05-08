@@ -4,14 +4,14 @@ import model_config
 from data_helper import DataHelper
 
 
-def create_model(idx2vec):
+def create_model(emb_weights, emb_trainable: bool):
     inputs = keras.layers.Input(shape=(model_config.feature1_count,))
 
     emb = keras.layers.Embedding(
-        input_dim=idx2vec.shape[0],
+        input_dim=emb_weights.shape[0],
         output_dim=model_config.feature2_count,
-        weights=[idx2vec],
-        trainable=True
+        weights=[emb_weights],
+        trainable=emb_trainable
     )(inputs)
 
     filters = 128

@@ -61,20 +61,21 @@ if __name__ == '__main__':
     from model_creator import create_model
 
     print(sys.argv)
-    if len(sys.argv) != 3:
-        print('python3 model_train.py [batch_size] [epochs]')
+    if len(sys.argv) != 4:
+        print('python3 model_train.py <batch_size> <epochs> <emb_trainable[true/false]>')
         exit(0)
 
     batch_size = int(sys.argv[1])
     epochs = int(sys.argv[2])
-    print('batch_size %s epochs %s' % (batch_size, epochs))
+    emb_trainable = True if sys.argv[3].lower() == 'true' else False
+    print('batch_size %s epochs %s emb_trainable %s' % (batch_size, epochs, emb_trainable))
 
     # 加载数据
     print('data loading...')
     data_helper = DataHelper()
 
     # 重新训练一个新模型
-    model = create_model(data_helper.idx2vec)
+    model = create_model(emb_weights=data_helper.idx2vec, emb_trainable=emb_trainable)
     train(
         data_helper=data_helper,
         model=model,
