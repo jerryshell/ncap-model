@@ -7,25 +7,29 @@ from data_loader import DataLoader
 class DataHelper:
     def __init__(self):
         # 加载字典
-        word2vec = {}
         self.word2idx = {}
-        max_idx = 1
         with open('./data/sgns.wiki.bigram-char') as f:
-            for line in f:
-                values = line.strip().split(' ')
-                # print(values)
-                if len(values) <= 300:
-                    continue
-                word = values[0]
-                vec = np.asarray(values[1:], dtype='float32')
-                word2vec[word] = vec
-                self.word2idx[word] = max_idx
-                max_idx += 1
+            length, dim = f.readline().strip().split(' ')
+            length = int(length)
+            dim = int(dim)
+            print('length %s dim %s' % (length, dim))
 
-        self.idx2vec = np.zeros(shape=(max_idx, model_config.feature2_count))
-        for word, idx in self.word2idx.items():
-            vec = word2vec.get(word)
-            self.idx2vec[idx] = vec
+            self.idx2vec = np.zeros(shape=(length, model_config.feature2_count))
+
+            max_idx = 1
+            for line in f:
+                line_split = line.strip().split(' ')
+                # print(values)
+                if len(line_split) <= 300:
+                    continue
+
+                word = line_split[0]
+                vec = np.asarray(line_split[1:], dtype='float32')
+
+                self.word2idx[word] = max_idx
+                self.idx2vec[max_idx] = vec
+
+                max_idx += 1
 
         # 加载原始数据
         data_loader = DataLoader()
