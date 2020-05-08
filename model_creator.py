@@ -15,7 +15,7 @@ def create_model(emb_weights, emb_trainable: bool):
     )(inputs)
 
     filters = 128
-    kernel_sizes = [3, 4, 5]
+    kernel_sizes = [2, 3, 4]
     padding = 'valid'
 
     cnn1 = keras.layers.SeparableConv1D(
@@ -26,7 +26,7 @@ def create_model(emb_weights, emb_trainable: bool):
         activation='relu',
     )(emb)
     cnn1 = keras.layers.MaxPooling1D(
-        pool_size=4,
+        pool_size=2,
     )(cnn1)
 
     cnn2 = keras.layers.SeparableConv1D(
@@ -37,7 +37,7 @@ def create_model(emb_weights, emb_trainable: bool):
         activation='relu',
     )(emb)
     cnn2 = keras.layers.MaxPooling1D(
-        pool_size=4,
+        pool_size=2,
     )(cnn2)
 
     cnn3 = keras.layers.SeparableConv1D(
@@ -45,10 +45,10 @@ def create_model(emb_weights, emb_trainable: bool):
         kernel_size=kernel_sizes[2],
         strides=1,
         padding=padding,
-        activation='relu'
+        activation='relu',
     )(emb)
     cnn3 = keras.layers.MaxPooling1D(
-        pool_size=4,
+        pool_size=2,
     )(cnn3)
 
     cnn = keras.layers.Concatenate(axis=-1)([cnn1, cnn2, cnn3])
@@ -63,7 +63,7 @@ def create_model(emb_weights, emb_trainable: bool):
     model.compile(
         loss='sparse_categorical_crossentropy',
         optimizer='adam',
-        metrics=['accuracy']
+        metrics=['accuracy'],
     )
     return model
 
@@ -73,5 +73,5 @@ if __name__ == '__main__':
     print('data loading...')
     data_helper = DataHelper()
 
-    model = create_model(data_helper.idx2vec)
+    model = create_model(emb_weights=data_helper.idx2vec, emb_trainable=False)
     model.summary()
