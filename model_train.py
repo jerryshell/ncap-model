@@ -1,19 +1,19 @@
-import datetime
+from datetime import datetime
 
-import tensorflow as tf
-from tensorflow import keras
+import tensorflow.keras as keras
 
-import model_config
 from data_helper import DataHelper
 
 
-def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
+def train(
+        data_helper: DataHelper,
+        model: keras.Model,
+        save_filename: str,
+        batch_size=32,
+        epochs=10
+):
     # 模型信息
     model.summary()
-
-    # 加载数据
-    print('data loading...')
-    data_helper = DataHelper(model_config.feature1_count, model_config.feature2_count)
 
     # 训练数据生成器
     train_data_generator = data_helper.train_data_generator(batch_size)
@@ -32,12 +32,12 @@ def train(model: keras.Model, save_filename: str, batch_size=32, epochs=10):
         shuffle=True,
         callbacks=[
             # 配置 tensorboard，将训练过程可视化，方便调参，tensorboard --logdir logs/fit
-            tf.keras.callbacks.TensorBoard(
-                log_dir='logs/fit/' + datetime.datetime.now().strftime('%Y%m%d-%H%M%S'),
+            keras.callbacks.TensorBoard(
+                log_dir='logs/fit/' + datetime.now().strftime('%Y%m%d-%H%M%S'),
                 histogram_freq=1
             ),
             # 定时保存模型
-            tf.keras.callbacks.ModelCheckpoint(
+            keras.callbacks.ModelCheckpoint(
                 filepath=save_filename,
                 monitor='val_loss',
                 verbose=0,
@@ -69,9 +69,14 @@ if __name__ == '__main__':
     epochs = int(sys.argv[2])
     print('batch_size %s epochs %s' % (batch_size, epochs))
 
+    # 加载数据
+    print('data loading...')
+    data_helper = DataHelper()
+
     # 重新训练一个新模型
-    model = create_model(model_config.feature1_count, model_config.feature2_count)
+    model = create_model(data_helper.idx2vec)
     train(
+        data_helper=data_helper,
         model=model,
         save_filename='text_cnn.2.h5',
         batch_size=batch_size,

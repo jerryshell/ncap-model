@@ -2,7 +2,6 @@ import sys
 
 import tensorflow.keras as keras
 
-import model_config
 from data_helper import DataHelper
 
 argv = sys.argv
@@ -20,7 +19,7 @@ model.summary()
 
 # 加载数据
 print('data loading...')
-data_helper = DataHelper(model_config.feature1_count, model_config.feature2_count)
+data_helper = DataHelper()
 
 # 数据生成器
 test_data_generator = data_helper.test_data_generator(batch_size)

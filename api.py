@@ -9,7 +9,6 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
-import model_config
 from data_helper import DataHelper
 
 if len(sys.argv) != 2:
@@ -39,7 +38,7 @@ model.summary()
 
 # 加载数据
 print('vector loading...')
-data_helper = DataHelper(model_config.feature1_count, model_config.feature2_count)
+data_helper = DataHelper()
 
 # 实例化 FastAPI
 app = FastAPI()
@@ -129,11 +128,11 @@ def main(form: UniappForm):
             if train_status['real_time_tuning']:
                 train_label_np = np.zeros(shape=(1, 1))
                 train_label_np.put(0, train_label)
-                test_data = data_helper.sentence2batch_vector(sentence)
+                test_data = data_helper.sentence2idx(sentence)
                 model.fit(test_data, train_label_np)
 
         # 调用模型获得结果
-        test_data = data_helper.sentence2batch_vector(sentence)
+        test_data = data_helper.sentence2idx(sentence)
         result = model.predict(test_data)
         p = result[0][0] * 100
         n = result[0][1] * 100

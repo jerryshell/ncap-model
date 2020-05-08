@@ -1,8 +1,18 @@
 import tensorflow.keras as keras
 
+import model_config
+from data_helper import DataHelper
 
-def create_model(feature1_number, feature2_number):
-    inputs = keras.layers.Input(shape=(feature1_number, feature2_number))
+
+def create_model(idx2vec):
+    inputs = keras.layers.Input(shape=(model_config.feature1_count,))
+
+    emb = keras.layers.Embedding(
+        input_dim=idx2vec.shape[0],
+        output_dim=model_config.feature2_count,
+        weights=[idx2vec],
+        trainable=True
+    )(inputs)
 
     filters = 128
     kernel_sizes = [3, 4, 5]
@@ -14,7 +24,7 @@ def create_model(feature1_number, feature2_number):
         strides=1,
         padding=padding,
         activation='relu',
-    )(inputs)
+    )(emb)
     cnn1 = keras.layers.MaxPooling1D(
         pool_size=4,
     )(cnn1)
@@ -25,7 +35,7 @@ def create_model(feature1_number, feature2_number):
         strides=1,
         padding=padding,
         activation='relu',
-    )(inputs)
+    )(emb)
     cnn2 = keras.layers.MaxPooling1D(
         pool_size=4,
     )(cnn2)
@@ -36,7 +46,7 @@ def create_model(feature1_number, feature2_number):
         strides=1,
         padding=padding,
         activation='relu'
-    )(inputs)
+    )(emb)
     cnn3 = keras.layers.MaxPooling1D(
         pool_size=4,
     )(cnn3)
@@ -59,7 +69,9 @@ def create_model(feature1_number, feature2_number):
 
 
 if __name__ == '__main__':
-    import model_config
+    # 加载数据
+    print('data loading...')
+    data_helper = DataHelper()
 
-    model = create_model(model_config.feature1_count, model_config.feature2_count)
+    model = create_model(data_helper.idx2vec)
     model.summary()
