@@ -4,14 +4,15 @@ import model_config
 from data_helper import DataHelper
 
 
-def create_model(emb_weights, emb_trainable: bool):
+def create_model(embedding_weights, embedding_trainable: bool):
     inputs = keras.layers.Input(shape=(model_config.feature1_count,))
 
-    emb = keras.layers.Embedding(
-        input_dim=emb_weights.shape[0],
+    embedding = keras.layers.Embedding(
+        input_dim=embedding_weights.shape[0],
         output_dim=model_config.feature2_count,
-        weights=[emb_weights],
-        trainable=emb_trainable
+        weights=[embedding_weights],
+        trainable=embedding_trainable,
+        name='embedding',
     )(inputs)
 
     filters = 128
@@ -24,9 +25,11 @@ def create_model(emb_weights, emb_trainable: bool):
         strides=1,
         padding=padding,
         activation='relu',
-    )(emb)
-    cnn1 = keras.layers.MaxPooling1D(
+        name='cnn1',
+    )(embedding)
+    max_pool1 = keras.layers.MaxPooling1D(
         pool_size=2,
+        name='max_pool1',
     )(cnn1)
 
     cnn2 = keras.layers.SeparableConv1D(
@@ -35,9 +38,11 @@ def create_model(emb_weights, emb_trainable: bool):
         strides=1,
         padding=padding,
         activation='relu',
-    )(emb)
-    cnn2 = keras.layers.MaxPooling1D(
+        name='cnn2',
+    )(embedding)
+    max_pool2 = keras.layers.MaxPooling1D(
         pool_size=2,
+        name='max_pool2',
     )(cnn2)
 
     cnn3 = keras.layers.SeparableConv1D(
@@ -46,18 +51,20 @@ def create_model(emb_weights, emb_trainable: bool):
         strides=1,
         padding=padding,
         activation='relu',
-    )(emb)
-    cnn3 = keras.layers.MaxPooling1D(
+        name='cnn3',
+    )(embedding)
+    max_pool3 = keras.layers.MaxPooling1D(
         pool_size=2,
+        name='max_pool3',
     )(cnn3)
 
-    cnn = keras.layers.Concatenate(axis=-1)([cnn1, cnn2, cnn3])
+    concatenate = keras.layers.Concatenate(axis=1)([max_pool1, max_pool2, max_pool3])
 
-    flat = keras.layers.Flatten()(cnn)
+    flatten = keras.layers.Flatten()(concatenate)
 
-    drop = keras.layers.Dropout(0.5)(flat)
+    dropout = keras.layers.Dropout(0.5)(flatten)
 
-    outputs = keras.layers.Dense(2, activation='softmax')(drop)
+    outputs = keras.layers.Dense(2, activation='softmax')(dropout)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
@@ -73,5 +80,5 @@ if __name__ == '__main__':
     print('data loading...')
     data_helper = DataHelper()
 
-    model = create_model(emb_weights=data_helper.idx2vec, emb_trainable=False)
+    model = create_model(embedding_weights=data_helper.idx2vec, embedding_trainable=False)
     model.summary()

@@ -75,7 +75,10 @@ if __name__ == '__main__':
     data_helper = DataHelper()
 
     # 重新训练一个新模型
-    model = create_model(emb_weights=data_helper.idx2vec, emb_trainable=emb_trainable)
+    model = create_model(
+        embedding_weights=data_helper.idx2vec,
+        embedding_trainable=emb_trainable
+    )
     train(
         data_helper=data_helper,
         model=model,
