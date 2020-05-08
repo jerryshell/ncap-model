@@ -86,9 +86,9 @@ def create_model_cnn(embedding_weights, embedding_trainable: bool):
         name='embedding',
     )(inputs)
 
-    conv1 = keras.layers.Conv1D(
-        filters=32,
-        kernel_size=7,
+    conv1 = keras.layers.SeparableConv1D(
+        filters=16,
+        kernel_size=5,
         activation='relu',
         # kernel_regularizer=keras.regularizers.l2(),
     )(embedding)
@@ -96,9 +96,9 @@ def create_model_cnn(embedding_weights, embedding_trainable: bool):
 
     # dropout1 = keras.layers.Dropout(0.5)(max_pool)
 
-    conv2 = keras.layers.Conv1D(
-        filters=32,
-        kernel_size=7,
+    conv2 = keras.layers.SeparableConv1D(
+        filters=16,
+        kernel_size=5,
         activation='relu',
         # kernel_regularizer=keras.regularizers.l2(),
     )(max_pool)
