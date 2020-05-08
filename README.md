@@ -21,11 +21,7 @@ pip3 install --upgrade tensorflow keras pandas numpy jieba gensim fastapi uvicor
 ## Docker
 
 ```bash
-mkdir -p /docker-data/tf/notebooks
-```
-
-```bash
-docker run -d --rm \
+docker run -d --rm --name tf \
   -v $PWD:/tmp \
   -w /tmp \
   tensorflow/tensorflow:latest \
