@@ -75,7 +75,7 @@ if __name__ == '__main__':
     data_helper = DataHelper()
 
     # 重新训练一个新模型
-    model = model_creator.create_model_lstm(
+    model = model_creator.create_model_cnn(
         embedding_weights=data_helper.idx2vec,
         embedding_trainable=embedding_trainable
     )

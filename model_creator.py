@@ -62,9 +62,9 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
 
     flatten = keras.layers.Flatten()(concatenate)
 
-    dropout = keras.layers.Dropout(0.5)(flatten)
+    dropout = keras.layers.Dropout(rate=0.5)(flatten)
 
-    outputs = keras.layers.Dense(2, activation='softmax')(dropout)
+    outputs = keras.layers.Dense(units=2, activation='softmax')(dropout)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
@@ -75,7 +75,7 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
     return model
 
 
-def create_model_lstm(embedding_weights, embedding_trainable: bool):
+def create_model_cnn(embedding_weights, embedding_trainable: bool):
     inputs = keras.layers.Input(shape=(model_config.feature1_count,))
 
     embedding = keras.layers.Embedding(
@@ -86,14 +86,27 @@ def create_model_lstm(embedding_weights, embedding_trainable: bool):
         name='embedding',
     )(inputs)
 
-    lstm = keras.layers.LSTM(
-        units=32,
-        name='lstm',
+    conv1 = keras.layers.Conv1D(
+        filters=32,
+        kernel_size=7,
+        activation='relu',
+        # kernel_regularizer=keras.regularizers.l2(),
     )(embedding)
+    max_pool = keras.layers.MaxPooling1D(pool_size=5)(conv1)
 
-    dropout = keras.layers.Dropout(0.5)(lstm)
+    # dropout1 = keras.layers.Dropout(0.5)(max_pool)
 
-    outputs = keras.layers.Dense(2, activation='softmax')(dropout)
+    conv2 = keras.layers.Conv1D(
+        filters=32,
+        kernel_size=7,
+        activation='relu',
+        # kernel_regularizer=keras.regularizers.l2(),
+    )(max_pool)
+    global_max_pool = keras.layers.GlobalMaxPooling1D()(conv2)
+
+    dropout2 = keras.layers.Dropout(0.5)(global_max_pool)
+
+    outputs = keras.layers.Dense(units=2, activation='softmax')(dropout2)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
@@ -109,7 +122,7 @@ if __name__ == '__main__':
     print('data loading...')
     data_helper = DataHelper()
 
-    model = create_model_lstm(
+    model = create_model_cnn(
         embedding_weights=data_helper.idx2vec,
         embedding_trainable=False
     )
