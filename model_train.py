@@ -58,31 +58,31 @@ def train(
 
 if __name__ == '__main__':
     import sys
-    from model_creator import create_model
+    import model_creator
 
     print(sys.argv)
     if len(sys.argv) != 4:
-        print('python3 model_train.py <batch_size> <epochs> <emb_trainable[true/false]>')
+        print('python3 model_train.py <batch_size> <epochs> <embedding_trainable[true/false]>')
         exit(0)
 
     batch_size = int(sys.argv[1])
     epochs = int(sys.argv[2])
-    emb_trainable = True if sys.argv[3].lower() == 'true' else False
-    print('batch_size %s epochs %s emb_trainable %s' % (batch_size, epochs, emb_trainable))
+    embedding_trainable = True if sys.argv[3].lower() == 'true' else False
+    print('batch_size %s epochs %s embedding_trainable %s' % (batch_size, epochs, embedding_trainable))
 
     # 加载数据
     print('data loading...')
     data_helper = DataHelper()
 
     # 重新训练一个新模型
-    model = create_model(
+    model = model_creator.create_model_lstm(
         embedding_weights=data_helper.idx2vec,
-        embedding_trainable=emb_trainable
+        embedding_trainable=embedding_trainable
     )
     train(
         data_helper=data_helper,
         model=model,
-        save_filename='text_cnn.2.h5',
+        save_filename='lstm.2.h5',
         batch_size=batch_size,
         epochs=epochs
     )
