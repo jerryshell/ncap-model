@@ -5,18 +5,18 @@ from data_helper import DataHelper
 
 
 def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
-    inputs = keras.layers.Input(shape=(model_config.feature1_count,))
+    inputs = keras.layers.Input(shape=(model_config.word_count,))
 
     embedding = keras.layers.Embedding(
         input_dim=embedding_weights.shape[0],
-        output_dim=model_config.feature2_count,
+        output_dim=embedding_weights.shape[1],
         weights=[embedding_weights],
         trainable=embedding_trainable,
         name='embedding',
     )(inputs)
 
-    filters = 512
-    kernel_sizes = [6, 5, 4]
+    filters = 16
+    kernel_sizes = [7, 6, 5]
 
     cnn1 = keras.layers.SeparableConv1D(
         filters=filters,
@@ -66,7 +66,6 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
 
 
 if __name__ == '__main__':
-    # 加载数据
     print('data loading...')
     data_helper = DataHelper()
 

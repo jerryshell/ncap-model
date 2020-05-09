@@ -128,11 +128,11 @@ def main(form: UniappForm):
             if train_status['real_time_tuning']:
                 train_label_np = np.zeros(shape=(1, 1))
                 train_label_np.put(0, train_label)
-                test_data = data_helper.sentence2idx(sentence)
+                test_data = data_helper.sentence2idx_list(sentence)
                 model.fit(test_data, train_label_np)
 
         # 调用模型获得结果
-        test_data = data_helper.sentence2idx(sentence)
+        test_data = data_helper.sentence2idx_list(sentence)
         result = model.predict(test_data)
         p = result[0][0] * 100
         n = result[0][1] * 100
