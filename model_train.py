@@ -75,14 +75,14 @@ if __name__ == '__main__':
     data_helper = DataHelper()
 
     # 重新训练一个新模型
-    model = model_creator.create_model_cnn(
+    model = model_creator.create_model_text_cnn(
         embedding_weights=data_helper.idx2vec,
         embedding_trainable=embedding_trainable
     )
     train(
         data_helper=data_helper,
         model=model,
-        save_filename='lstm.2.h5',
+        save_filename='text_cnn.2.h5',
         batch_size=batch_size,
         epochs=epochs
     )
