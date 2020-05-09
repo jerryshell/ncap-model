@@ -60,7 +60,7 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
     model.compile(
         optimizer='adam',
         loss='sparse_categorical_crossentropy',
-        metrics=['accuracy', 'categorical_accuracy', 'sparse_categorical_accuracy'],
+        metrics=['sparse_categorical_accuracy'],
     )
     return model
 
