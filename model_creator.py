@@ -15,7 +15,7 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         name='embedding',
     )(inputs)
 
-    filters = 16
+    filters = 32
     kernel_sizes = [7, 6, 5]
 
     cnn1 = keras.layers.SeparableConv1D(
@@ -52,9 +52,9 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
 
     flatten = keras.layers.Flatten()(concatenate)
 
-    dropout = keras.layers.Dropout(rate=0.5)(flatten)
+    batch_normal = keras.layers.BatchNormalization()(flatten)
 
-    outputs = keras.layers.Dense(units=2, activation='softmax')(dropout)
+    outputs = keras.layers.Dense(units=2, activation='softmax')(batch_normal)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(
