@@ -15,7 +15,7 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         name='embedding',
     )(inputs)
 
-    filters = 32
+    filters = 64
     kernel_sizes = [7, 6, 5]
 
     cnn1 = keras.layers.SeparableConv1D(
