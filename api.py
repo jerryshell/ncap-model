@@ -10,6 +10,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, Field
 
 from data_helper import DataHelper
+from sysinfo.loadavg import loadavg
+from sysinfo.meminfo import meminfo
 
 if len(sys.argv) != 2:
     print('python3 api.py [model_filename]')
@@ -200,6 +202,8 @@ def info():
     model.summary()
     return {
         'ok': True,
+        'loadavg': loadavg(),
+        'meminfo': meminfo(),
         'notice': notice,
         'train_status': train_status,
         'model_filename': model_filename
