@@ -46,7 +46,7 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         name='cnn3',
     )(embedding)
     batch_normal3 = keras.layers.BatchNormalization(name='bn3')(cnn3)
-    relu3 = keras.layers.ReLU()(batch_normal3)
+    relu3 = keras.layers.ReLU(name='relu3')(batch_normal3)
     max_pool3 = keras.layers.MaxPooling1D(
         name='max_pool3',
     )(relu3)
