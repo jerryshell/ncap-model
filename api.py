@@ -212,6 +212,7 @@ def info():
     }
 
 
+# 获取所有 model_filename
 @app.get('/list/model_filename')
 def list_model_filename():
     return os.popen('ls *.h5').read().strip().split('\n')
@@ -248,9 +249,9 @@ def model_reload(form: ModelReloadForm):
     model_filename = form.model_filename
 
     try:
-        new_model = keras.models.load_model(model_filename)
         global model
-        model = new_model
+        del model
+        model = keras.models.load_model(model_filename)
         model.summary()
     except Exception as e:
         print(e)
