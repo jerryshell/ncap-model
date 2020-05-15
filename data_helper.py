@@ -1,3 +1,6 @@
+import re
+
+import jieba
 import numpy as np
 
 import model_config
@@ -101,8 +104,14 @@ class DataHelper:
 
     # 将一个句子转成 idx 列表
     def sentence2idx_list(self, sentence):
+        # 去特殊字符
+        sentence = re.sub(r'\W+', ' ', sentence).replace('_', ' ')
+        # 分词
+        word_list = jieba.lcut(sentence)
+        # 去空格
+        word_list = [item for item in word_list if item != ' ']
+        # 把 word_list 转换成 idx_list
         result = np.zeros(shape=(1, model_config.word_count))
-        word_list = sentence.split(' ')
         result[0] = self.word_list2idx_list(word_list)
         return result
 
