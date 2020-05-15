@@ -210,6 +210,11 @@ def info():
     }
 
 
+@app.get('/list/model_filename')
+def list_model_filename():
+    return os.popen('ls *.h5').read().strip().split('\n')
+
+
 # 快照接口
 @app.post('/snapshot')
 def snapshot(form: SnapshotForm):
