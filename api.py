@@ -253,6 +253,8 @@ def model_reload(form: ModelReloadForm):
         global model
         del model
         gc.collect()
+        keras.backend.clear_session()
+        gc.collect()
         model = keras.models.load_model(model_filename)
         gc.collect()
         model.summary()
