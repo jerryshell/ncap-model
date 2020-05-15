@@ -131,12 +131,12 @@ def main(form: UniappForm):
                 train_label_np = np.zeros(shape=(1, 1))
                 train_label_np.put(0, train_label)
                 test_data = data_helper.sentence2idx_list(sentence)
-                print('sentence', sentence)
-                print('sentence2idx_list', test_data)
                 model.fit(test_data, train_label_np)
 
         # 调用模型获得结果
         test_data = data_helper.sentence2idx_list(sentence)
+        print('sentence', sentence)
+        print('sentence2idx_list', test_data)
         result = model.predict(test_data)
         p = result[0][0] * 100
         n = result[0][1] * 100
