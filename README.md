@@ -8,8 +8,8 @@
 ### 升级 pip 并设置镜像
 
 ```bash
-pip3 install --upgrade pip -i https://pypi.douban.com/simple
-pip3 config set global.index-url https://pypi.douban.com/simple
+pip3 install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
+pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple
 ```
 
 ### 安装依赖
@@ -27,8 +27,8 @@ docker run -d --rm --name tf \
   -v $PWD:/data \
   -w /data \
   tensorflow/tensorflow:latest \
-  bash -c ' pip3 install -U pip -i https://pypi.douban.com/simple && \
-  pip3 config set global.index-url https://pypi.douban.com/simple && \
+  bash -c ' pip3 install -U pip -i https://mirrors.aliyun.com/pypi/simple && \
+  pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple && \
   pip3 install -U tensorflow keras pandas numpy jieba gensim fastapi uvicorn && \
   python3 model_train.py 64 100 false 1>log 2>&1 '
 ```
@@ -52,8 +52,8 @@ docker run -d --rm --name tf-api \
   -v $PWD:/data \
   -w /data \
   tensorflow/tensorflow:latest \
-  bash -c ' pip3 install -U pip -i https://pypi.douban.com/simple && \
-  pip3 config set global.index-url https://pypi.douban.com/simple && \
+  bash -c ' pip3 install -U pip -i https://mirrors.aliyun.com/pypi/simple && \
+  pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple && \
   pip3 install -U tensorflow keras pandas numpy jieba gensim fastapi uvicorn && \
   python3 api.py text_cnn.2.75.h5 1>api_log 2>&1 '
 ```
