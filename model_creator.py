@@ -5,7 +5,10 @@ from data_helper import DataHelper
 
 
 def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
-    inputs = keras.layers.Input(shape=(model_config.word_count,))
+    inputs = keras.layers.Input(
+        shape=(model_config.word_count,),
+        name='inputs'
+    )
 
     embedding = keras.layers.Embedding(
         input_dim=embedding_weights.shape[0],
@@ -15,7 +18,7 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         name='embedding',
     )(inputs)
 
-    filters = 64
+    filters = 32
     kernel_sizes = [7, 6, 5]
 
     cnn1 = keras.layers.SeparableConv1D(
@@ -23,8 +26,7 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         kernel_size=kernel_sizes[0],
         name='cnn1',
     )(embedding)
-    batch_normal1 = keras.layers.BatchNormalization(name='bn1')(cnn1)
-    relu1 = keras.layers.ReLU(name='relu1')(batch_normal1)
+    relu1 = keras.layers.ReLU(name='relu1')(cnn1)
     max_pool1 = keras.layers.MaxPooling1D(
         name='max_pool1',
     )(relu1)
@@ -34,8 +36,7 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         kernel_size=kernel_sizes[1],
         name='cnn2',
     )(embedding)
-    batch_normal2 = keras.layers.BatchNormalization(name='bn2')(cnn2)
-    relu2 = keras.layers.ReLU(name='relu2')(batch_normal2)
+    relu2 = keras.layers.ReLU(name='relu2')(cnn2)
     max_pool2 = keras.layers.MaxPooling1D(
         name='max_pool2',
     )(relu2)
@@ -45,8 +46,7 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         kernel_size=kernel_sizes[2],
         name='cnn3',
     )(embedding)
-    batch_normal3 = keras.layers.BatchNormalization(name='bn3')(cnn3)
-    relu3 = keras.layers.ReLU(name='relu3')(batch_normal3)
+    relu3 = keras.layers.ReLU(name='relu3')(cnn3)
     max_pool3 = keras.layers.MaxPooling1D(
         name='max_pool3',
     )(relu3)
@@ -55,7 +55,11 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
 
     flatten = keras.layers.Flatten()(concatenate)
 
-    outputs = keras.layers.Dense(units=2, activation='softmax')(flatten)
+    outputs = keras.layers.Dense(
+        units=2,
+        activation='softmax',
+        name='outputs',
+    )(flatten)
 
     model = keras.Model(inputs=inputs, outputs=outputs)
     model.compile(

@@ -44,6 +44,20 @@ docker run -d --rm --name tf-board \
   tensorboard --logdir logs/fit --host 0.0.0.0 --port 6006
 ```
 
+### API
+
+```bash
+docker run -d --rm --name tf-api \
+  -p 8000:8000 \
+  -v $PWD:/data \
+  -w /data \
+  tensorflow/tensorflow:latest \
+  bash -c ' pip3 install -U pip -i https://pypi.douban.com/simple && \
+  pip3 config set global.index-url https://pypi.douban.com/simple && \
+  pip3 install -U tensorflow keras pandas numpy jieba gensim fastapi uvicorn && \
+  python3 api.py text_cnn.2.75.h5 1>api_log 2>&1 '
+```
+
 ## 参考
 
 * https://tf.wiki
