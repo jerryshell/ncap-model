@@ -1,3 +1,4 @@
+import gc
 import os
 import sys
 import time
@@ -251,7 +252,9 @@ def model_reload(form: ModelReloadForm):
     try:
         global model
         del model
+        gc.collect()
         model = keras.models.load_model(model_filename)
+        gc.collect()
         model.summary()
     except Exception as e:
         print(e)
