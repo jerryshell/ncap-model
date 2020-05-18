@@ -57,12 +57,12 @@ app.add_middleware(
 )
 
 
-# uniapp form
-class UniappForm(BaseModel):
+# predict form
+class PredictForm(BaseModel):
     sentence: str
     token: str
     train_flag: bool = Field(default=False, alias='trainFlag')
-    train_label: int = Field(default=False, alias='trainLabel')
+    train_label: int = Field(default=0, alias='trainLabel')
 
 
 # admin form
@@ -97,7 +97,7 @@ def index():
 
 # uniapp 接口
 @app.post('/')
-def main(form: UniappForm):
+def main(form: PredictForm):
     print(form)
 
     # 解析请求参数
