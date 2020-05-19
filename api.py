@@ -95,7 +95,7 @@ def index():
     return {'Auth': 'Jerry', 'GitHub': 'https://github.com/jerryshell'}
 
 
-# uniapp 接口
+# 预测接口
 @app.post('/')
 def main(form: PredictForm):
     print(form)
