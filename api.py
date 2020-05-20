@@ -33,6 +33,9 @@ train_status = {
     'message': '实时调参开启',
 }
 
+# 使用次数
+use_count = 0
+
 # 加载模型
 print('model loading...')
 model_filename = sys.argv[1]
@@ -99,6 +102,10 @@ def index():
 @app.post('/')
 def main(form: PredictForm):
     print(form)
+
+    global use_count
+    use_count += 1
+    print('use_count', use_count)
 
     # 解析请求参数
     sentence_list = form.sentence.split('\n')
@@ -202,6 +209,7 @@ def admin(form: AdminForm):
 # 服务器信息接口
 @app.get('/info')
 def info():
+    global use_count
     model.summary()
     return {
         'ok': True,
@@ -209,7 +217,8 @@ def info():
         'meminfo': meminfo(),
         'notice': notice,
         'train_status': train_status,
-        'model_filename': model_filename
+        'model_filename': model_filename,
+        'use_count': use_count,
     }
 
 
