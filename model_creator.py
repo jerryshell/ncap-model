@@ -19,7 +19,7 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
     )(inputs)
 
     filters = 700
-    kernel_sizes = [6, 5, 4]
+    kernel_sizes = [6, 5, 4, 3]
 
     cnn1 = keras.layers.SeparableConv1D(
         filters=filters,
@@ -51,7 +51,17 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         name='max_pool3',
     )(relu3)
 
-    concatenate = keras.layers.Concatenate(axis=1)([max_pool1, max_pool2, max_pool3])
+    cnn4 = keras.layers.SeparableConv1D(
+        filters=filters,
+        kernel_size=kernel_sizes[3],
+        name='cnn4',
+    )(embedding)
+    relu4 = keras.layers.ReLU(name='relu4')(cnn4)
+    max_pool4 = keras.layers.MaxPooling1D(
+        name='max_pool4',
+    )(relu4)
+
+    concatenate = keras.layers.Concatenate(axis=1)([max_pool1, max_pool2, max_pool3, max_pool4])
 
     flatten = keras.layers.Flatten()(concatenate)
 
