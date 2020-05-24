@@ -26,7 +26,8 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         kernel_size=kernel_sizes[0],
         name='cnn1',
     )(embedding)
-    relu1 = keras.layers.ReLU(name='relu1')(cnn1)
+    bn1 = keras.layers.BatchNormalization()(cnn1)
+    relu1 = keras.layers.ReLU(name='relu1')(bn1)
     max_pool1 = keras.layers.MaxPooling1D(
         name='max_pool1',
     )(relu1)
@@ -36,7 +37,8 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         kernel_size=kernel_sizes[1],
         name='cnn2',
     )(embedding)
-    relu2 = keras.layers.ReLU(name='relu2')(cnn2)
+    bn1 = keras.layers.BatchNormalization()(cnn2)
+    relu2 = keras.layers.ReLU(name='relu2')(bn1)
     max_pool2 = keras.layers.MaxPooling1D(
         name='max_pool2',
     )(relu2)
@@ -46,7 +48,8 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         kernel_size=kernel_sizes[2],
         name='cnn3',
     )(embedding)
-    relu3 = keras.layers.ReLU(name='relu3')(cnn3)
+    bn1 = keras.layers.BatchNormalization()(cnn3)
+    relu3 = keras.layers.ReLU(name='relu3')(bn1)
     max_pool3 = keras.layers.MaxPooling1D(
         name='max_pool3',
     )(relu3)
@@ -56,7 +59,8 @@ def create_model_text_cnn(embedding_weights, embedding_trainable: bool):
         kernel_size=kernel_sizes[3],
         name='cnn4',
     )(embedding)
-    relu4 = keras.layers.ReLU(name='relu4')(cnn4)
+    bn1 = keras.layers.BatchNormalization()(cnn4)
+    relu4 = keras.layers.ReLU(name='relu4')(bn1)
     max_pool4 = keras.layers.MaxPooling1D(
         name='max_pool4',
     )(relu4)
