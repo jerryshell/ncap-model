@@ -11,7 +11,7 @@ class DataHelper:
     def __init__(self):
         # 构建 word2idx 和 idx2vec 字典
         self.word2idx = {}
-        with open(model_config.vector_filepath) as f:
+        with open(model_config.vector_filepath, encoding='utf-8') as f:
             length, dim = f.readline().strip().split(' ')
             length = int(length)
             dim = int(dim)
