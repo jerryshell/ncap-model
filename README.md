@@ -9,7 +9,18 @@
 
 ```bash
 pip3 install --upgrade pip -i https://mirrors.aliyun.com/pypi/simple
+```
+
+#### aliyun
+
+```bash
 pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple
+```
+
+#### douban
+
+```bash
+pip3 config set global.index-url https://pypi.douban.com/simple
 ```
 
 ### 安装依赖
