@@ -1,9 +1,17 @@
-# TextCNN 文本情感分类
+# 新闻评论分析平台情感分析模块
 
-* 数据：https://github.com/SophonPlus/ChineseNlpCorpus/blob/master/datasets/simplifyweibo_4_moods/intro.ipynb
+* 训练数据：https://github.com/SophonPlus/ChineseNlpCorpus/blob/master/datasets/simplifyweibo_4_moods/intro.ipynb
 * 词向量：https://github.com/Embedding/Chinese-Word-Vectors
 
-## 依赖
+## 相关项目
+
+* [新闻评论分析平台 Web 端](https://github.com/jerryshell/ncap-admin)
+* [新闻评论分析平台数据大屏](https://github.com/jerryshell/ncap-datav)
+* [新闻评论分析平台服务端](https://github.com/jerryshell/ncap-server)
+* 新闻评论分析平台情感分析模块（当前项目）
+* [新闻评论分析平台数据采集模块](https://github.com/jerryshell/ncap-spider)
+
+## 环境配置
 
 ### 升级 pip 并设置镜像
 
@@ -31,7 +39,7 @@ pip3 install -U tensorflow keras pandas numpy jieba fastapi uvicorn
 
 ## Docker
 
-### train
+### 模型训练
 
 ```bash
 docker run -d --rm --name tf \
@@ -57,7 +65,7 @@ docker run -d --rm --name tf-board \
   tensorboard --logdir logs/fit --host 0.0.0.0 --port 6006
 ```
 
-### API
+### 开启 HTTP API
 
 ```bash
 docker run -d --rm --name tf-api \
@@ -69,7 +77,7 @@ docker run -d --rm --name tf-api \
     pip3 install -U pip -i https://mirrors.aliyun.com/pypi/simple && \
     pip3 config set global.index-url https://mirrors.aliyun.com/pypi/simple && \
     pip3 install -U tensorflow keras pandas numpy jieba fastapi uvicorn && \
-    python3 api.py text_cnn.2.78.h5 1>api_log 2>&1 \
+    python3 api.py text_cnn.2.79.h5 1>api_log 2>&1 \
   '
 ```
 
