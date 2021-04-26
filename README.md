@@ -1,5 +1,8 @@
 # 新闻评论分析平台情感分析模块
 
+## 数据
+
+* Google Drive: https://drive.google.com/drive/folders/1Ox89_qrsJ66AstvGYxCv_8sBo-WIcb8s?usp=sharing
 * 训练数据：https://github.com/SophonPlus/ChineseNlpCorpus/blob/master/datasets/simplifyweibo_4_moods/intro.ipynb
 * 词向量：https://github.com/Embedding/Chinese-Word-Vectors
 
